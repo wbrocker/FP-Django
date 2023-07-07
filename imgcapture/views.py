@@ -7,6 +7,12 @@ import logging
 from .forms import ImageForm
 from .models import ImageDetection
 
+# Function to delete specific images
+def delete_image(request, pk):
+    image = ImageDetection.objects.get(pk=pk)
+    image.delete()
+
+    return redirect('dashboard:image-list')
 
 @csrf_exempt
 def upload_image_view(request):

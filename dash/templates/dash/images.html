@@ -1,0 +1,25 @@
+{% extends "dash/base.html" %} 
+
+{% block content %} 
+    <table style="width: 70%;">
+        <tr>
+            <th>Id</th>
+            <th>Camera</th>
+            <th>Image</th>
+            <th>Created</th>
+            <th>Classified?</th>
+            <th>Other</th>
+        </tr>
+    {% for image in images %} 
+            <tr>
+                <td>{{ image.id }}</td>
+                <td>{{ image.cameraId }}</td>
+                <td><img src="{{ image.image.url }}" height="200" width="200"></td>
+                <td>{{ image.created }}</td>
+                <td>test</td>
+                <td><a href="/api/delete/{{ image.id }}">Delete</a></td>
+            </tr>
+        
+    {% endfor %} 
+    </table>
+{% endblock %} 
