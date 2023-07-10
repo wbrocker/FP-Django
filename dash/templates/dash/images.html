@@ -14,7 +14,8 @@
             <tr>
                 <td>{{ image.id }}</td>
                 <td>{{ image.cameraId }}</td>
-                <td><img src="{{ image.image.url }}" height="200" width="200"></td>
+                <td><a href="{% url 'dashboard:image' pk=image.id %}">
+                    <img src="{{ image.image.url }}" height="200" width="200"></a></td>
                 <td>{{ image.created }}</td>
                 <td>test</td>
                 <td><a href="/api/delete/{{ image.id }}">Delete</a></td>

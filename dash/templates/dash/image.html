@@ -1,0 +1,26 @@
+{% extends "dash/base.html" %} 
+
+{% block content %} 
+
+    <table>
+        <tr>
+            <th>Image Id</th>
+            <th>CameraId</th>
+            <th>Created</th>
+            <th>Updated</th>
+        </tr>
+    
+        <tr>
+            <td>{{ image.id }}</td>
+            <td>{{ image.cameraId }}</td>
+            <td>{{ image.created }}</td>
+            <td>{{ image.updated }}</td>
+        </tr>
+    </table>
+    <img src="{{ image.image.url }}" width="800"">
+    <br />
+
+    <a href="{% url 'dashboard:image-list' %}">Back</a>
+
+    </table>
+{% endblock %} 
