@@ -2,6 +2,7 @@ import os
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
+from .utils import detect
 
 import logging
 
@@ -37,6 +38,10 @@ def upload_image_view(request):
         logger = logging.getLogger(__name__)
         logger.debug(request.POST)
         logger.debug(request.FILES)
+
+        print(request.FILES['image'])
+
+        test = detect(request.FILES['image'], 'efficientdet_lite0.tflite')
 
         if form.is_valid():
             image_file = form.cleaned_data['image']
