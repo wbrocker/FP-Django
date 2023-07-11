@@ -2,6 +2,9 @@ import os
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 from .utils import detect
 
 import logging
@@ -39,13 +42,17 @@ def upload_image_view(request):
         logger.debug(request.POST)
         logger.debug(request.FILES)
 
-        print(request.FILES['image'])
-
-        test = detect(request.FILES['image'], 'efficientdet_lite0.tflite')
+   
 
         if form.is_valid():
             image_file = form.cleaned_data['image']
-            form.save()
+            instance = form.save()                      # Save the form instance to get the DB Record
+
+            # Process the Detect function Asynchronously.
+            detect(instance.id, './imgcapture/efficientdet_lite0.tflite')
+
+            # test = detect(image_file.name, 'efficientdet_lite0.tflite')
+
             return redirect('imgcapture:success')
         else:
             print("This form is not valid!")

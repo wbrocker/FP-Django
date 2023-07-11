@@ -1,12 +1,15 @@
 import sys
 import time
+import os
 
 import cv2
 from tflite_support.task import core
 from tflite_support.task import processor
 from tflite_support.task import vision
 
-def detect(filename, model: str):
+from .models import ImageDetection
+
+def detect(pk, model: str):
     """
     Detect the objects in the image and return results.
 
@@ -17,6 +20,11 @@ def detect(filename, model: str):
         width: The width of the frame
         height: The height of the frame
     """
+
+    filename = ImageDetection.objects.get(pk=pk).image.url
+    type(filename)
+    filename = "." + filename
+    print("Filename: " + filename)
 
     # Open the image from filename
     inputImage = cv2.imread(filename)
