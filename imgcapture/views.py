@@ -12,6 +12,16 @@ import logging
 from .forms import ImageForm
 from .models import ImageDetection
 
+# Function to re-analyze picture
+def re_analyze(request, pk):
+    # Retrieve the DB Object
+    image = get_object_or_404(ImageDetection, pk=pk)
+
+    detect(image.id, './imgcapture/efficientdet_lite0.tflite')
+
+    return redirect('dashboard:image', pk=pk)
+
+
 # Function to delete specific images
 def delete_image(request, pk):
     # Retrieve the database object

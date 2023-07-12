@@ -8,5 +8,6 @@ app_name = 'imgcapture'
 urlpatterns = [
     path('upload/', upload_image_view, name='upload_image'),
     path('delete/<int:pk>', views.delete_image, name='delete'),
+    path('analyze/<int:pk>', views.re_analyze, name='analyze'),
     path('success', success, name='success'),
 ]

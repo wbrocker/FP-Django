@@ -9,6 +9,7 @@
             <th>Created</th>
             <th>Updated</th>
             <th>Detection Details</th>
+            <th>Re-Check</th>
         </tr>
     
         <tr>
@@ -17,6 +18,7 @@
             <td>{{ image.created }}</td>
             <td>{{ image.updated }}</td>
             <td>{{ image.detection_data }}</td>
+            <td><a href="{% url 'imgcapture:analyze' pk=image.id %}">Analyze</a></td>
         </tr>
     </table>
     <img src="{{ image.image.url }}" width="800"">
