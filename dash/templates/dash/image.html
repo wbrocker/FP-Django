@@ -17,11 +17,20 @@
             <td>{{ image.cameraId }}</td>
             <td>{{ image.created }}</td>
             <td>{{ image.updated }}</td>
-            <td>{{ image.detection_data }}</td>
+            <td>{{ image.detection_data.detections }}</td>
             <td><a href="{% url 'imgcapture:analyze' pk=image.id %}">Analyze</a></td>
         </tr>
     </table>
-    <img src="{{ image.image.url }}" width="800"">
+    <div class="image-container">
+        <img src="{{ image.image.url }}" alt="Image">
+        {% for detect in image.detection_data.detections %} 
+            <div class="bounding-box" style="left: {{ detect.bounding_box.origin_x }}px;
+                                             top: {{detect.bounding_box.origin_y}}px; 
+                                             width: {{detect.bounding_box.width}}px; 
+                                             height: {{detect.bounding_box.height}}px;"></div>
+        {% endfor %}
+        
+    </div>
     <br />
 
     <a href="{% url 'dashboard:image-list' %}">Back</a>

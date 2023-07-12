@@ -8,18 +8,29 @@
             <th>Image</th>
             <th>Created</th>
             <th>Classified?</th>
+            <th>Identification</th>
             <th>Other</th>
         </tr>
     {% for image in images %} 
-            <tr>
-                <td>{{ image.id }}</td>
-                <td>{{ image.cameraId }}</td>
-                <td><a href="{% url 'dashboard:image' pk=image.id %}">
-                    <img src="{{ image.image.url }}" height="200" width="200"></a></td>
-                <td>{{ image.created }}</td>
-                <td>{{ image.analyzed }}</td>
-                <td><a href="/api/delete/{{ image.id }}">Delete</a></td>
-            </tr>
+        <tr>
+            <td>{{ image.id }}</td>
+            <td>{{ image.cameraId }}</td>
+            <td><a href="{% url 'dashboard:image' pk=image.id %}">
+                <img src="{{ image.image.url }}" height="200" width="200"></a></td>
+            <td>{{ image.created }}</td>
+            <td>{{ image.analyzed }}</td>
+            <td>
+                <!-- {{ image.detection_data }} -->
+                {% for detection in image.detection_data.detections %}
+                    {% for category in detection.categories %}
+                        <p>
+                            {{ category.category_name }}
+                        </p>
+                    {% endfor %} 
+                {% endfor %}
+            </td>
+            <td><a href="/api/delete/{{ image.id }}">Delete</a></td>
+        </tr>
         
     {% endfor %} 
     </table>
