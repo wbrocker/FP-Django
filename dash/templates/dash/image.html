@@ -8,6 +8,7 @@
             <th>CameraId</th>
             <th>Created</th>
             <th>Updated</th>
+            <th>Detection Details</th>
         </tr>
     
         <tr>
@@ -15,6 +16,7 @@
             <td>{{ image.cameraId }}</td>
             <td>{{ image.created }}</td>
             <td>{{ image.updated }}</td>
+            <td>{{ image.detection_data }}</td>
         </tr>
     </table>
     <img src="{{ image.image.url }}" width="800"">

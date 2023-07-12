@@ -1,6 +1,7 @@
 import sys
 import time
 import os
+import json 
 
 import cv2
 from tflite_support.task import core
@@ -8,6 +9,27 @@ from tflite_support.task import processor
 from tflite_support.task import vision
 
 from .models import ImageDetection
+
+# Custom serialization function for the Detection object
+def serialize_detection(detection):
+    return {
+        'bounding_box': {
+            'origin_x': detection.bounding_box.origin_x,
+            'origin_y': detection.bounding_box.origin_y,
+            'width': detection.bounding_box.width,
+            'height': detection.bounding_box.height
+        },
+        'categories': [
+            {
+                'index': category.index,
+                'score': category.score,
+                'display_name': category.display_name,
+                'category_name': category.category_name
+            }
+            for category in detection.categories
+        ]
+    }
+
 
 def detect(pk, model: str):
     """
@@ -21,7 +43,10 @@ def detect(pk, model: str):
         height: The height of the frame
     """
 
-    filename = ImageDetection.objects.get(pk=pk).image.url
+    image_detection = ImageDetection.objects.get(pk=pk)
+
+    #filename = ImageDetection.objects.get(pk=pk).image.url
+    filename = image_detection.image.url 
     type(filename)
     filename = "." + filename
     print("Filename: " + filename)
@@ -52,6 +77,36 @@ def detect(pk, model: str):
     # Run object detection estimation using the model.
     detection_result = detector.detect(input_tensor)
 
-    print(detection_result)
+    detections = detection_result.detections
+
+    # Serialize the TensorFlow object into JSON
+    serialized_data = json.dumps(
+        {
+            'detections': [serialize_detection(detection) for detection in detections]
+        }
+    )
+
+    image_detection.analyzed = True
+    image_detection.detection_data = serialized_data
+    image_detection.save()
+
+    # detected_objects = []
+    # for detection in detections:
+    #     bounding_box = detection.bounding_box
+    #     category = detection.categories
+        
+
+    #     detected_objects.append({
+    #         'bounding_box': bounding_box,
+    #         'category': category
+    #     })
+
+    # for obj in detected_objects:
+    #     print(f"Categories: {obj['category']}, Bounding Box: {obj['bounding_box']}")
+    #     print(f"{obj['category.score'] }")
+
+    # print(detection_result[..., :4])
+
+    # print(detection_result)
     
     return detection_result
