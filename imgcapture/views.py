@@ -43,6 +43,9 @@ def delete_image(request, pk):
 # csrf exempt to ensure easier upload from the ESP32-Cam
 @csrf_exempt
 def upload_image_view(request):
+    # Debug
+    print("Upload Started")
+
     # Confirm if it was a POST
     if request.method == 'POST':
 
@@ -51,15 +54,21 @@ def upload_image_view(request):
         logger = logging.getLogger(__name__)
         logger.debug(request.POST)
         logger.debug(request.FILES)
-
+        print(request.POST)
    
 
         if form.is_valid():
             image_file = form.cleaned_data['image']
             instance = form.save()                      # Save the form instance to get the DB Record
 
+            # Debug
+            print("Detection Started!")
+
             # Process the Detect function Asynchronously.
             detect(instance.id, './imgcapture/efficientdet_lite0.tflite')
+
+            # Debug
+            print("Detection DONE!")
 
             # test = detect(image_file.name, 'efficientdet_lite0.tflite')
 
@@ -71,6 +80,7 @@ def upload_image_view(request):
     else:
         form = ImageForm()
 
+    print("Upload Done")
     return render(request, 'upload.html', {'form': form})
 
 def success(request):

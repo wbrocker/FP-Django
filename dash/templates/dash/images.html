@@ -23,9 +23,11 @@
                 <!-- {{ image.detection_data }} -->
                 {% for detection in image.detection_data.detections %}
                     {% for category in detection.categories %}
-                        <p>
-                            {{ category.category_name }}
-                        </p>
+                        {% if category.score >= 0.5 %}
+                            <p>
+                                {{ category.category_name }}
+                            </p>
+                        {% endif %}
                     {% endfor %} 
                 {% endfor %}
             </td>

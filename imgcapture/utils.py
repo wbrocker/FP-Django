@@ -66,7 +66,7 @@ def detect(pk, model: str):
         base_options = base_options, detection_options = detection_options)
     detector = vision.ObjectDetector.create_from_options(options)
 
-    image = cv2.flip(inputImage, 1)
+    image = cv2.flip(inputImage, 0)
 
     # Convert the image from BGR to RGB as required from TFLite model.
     rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
