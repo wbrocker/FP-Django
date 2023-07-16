@@ -1,0 +1,17 @@
+{% extends "dash/base.html" %} 
+
+{% block content %}
+    <h1>Devices</h1>
+    <h2>Cameras</h2>
+    {% for device in cameras %}
+        Id: {{ device.id }}
+        Name: {{ device.device_name }}
+
+    {% endfor %}
+
+    <p>
+        <a href="{% url 'devices:add-cam' %}">Add Camera Device</a>
+    </p>
+    <h2>Alerting Devices</h2>
+
+{% endblock %} 

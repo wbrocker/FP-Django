@@ -10,6 +10,7 @@
             <th>Updated</th>
             <th>Detection Details</th>
             <th>Re-Check</th>
+            <th>Delete</th>
         </tr>
     
         <tr>
@@ -19,6 +20,7 @@
             <td>{{ image.updated }}</td>
             <td>{{ image.detection_data.detections }}</td>
             <td><a href="{% url 'imgcapture:analyze' pk=image.id %}">Analyze</a></td>
+            <td><a href="{% url 'imgcapture:delete' pk=image.id %}">Delete</a> </td>
         </tr>
     </table>
     <div class="image-container">
@@ -26,7 +28,7 @@
         {% for detect in image.detection_data.detections %} 
             <!-- Only draw boundinx box if score > 0.5 -->
             {% for category in detect.categories %}
-                {% if category.score >= 0.5 %}
+                {% if category.score >= 0.3 %}
                     <div class="bounding-box" style="left: {{ detect.bounding_box.origin_x }}px;
                                                     top: {{ detect.bounding_box.origin_y }}px; 
                                                     width: {{ detect.bounding_box.width }}px; 

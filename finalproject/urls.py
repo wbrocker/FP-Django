@@ -21,5 +21,6 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('imgcapture.urls')),       # API Component
+    path('devices/', include('devices.urls')),      # Devices Page
     path('', include('dash.urls')),                 # Component responsible for Dashboard
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

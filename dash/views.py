@@ -4,6 +4,7 @@ import json
 
 from imgcapture.models import ImageDetection
 
+
 def index(request):
     # return HttpResponse("Main Dashboard")
 
@@ -34,3 +35,4 @@ def individualImage(request, pk):
     return render(request,
                   'dash/image.html',
                   {'image': image})
+
