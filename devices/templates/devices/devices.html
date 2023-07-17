@@ -1,14 +1,57 @@
 {% extends "dash/base.html" %} 
 
+{% block title %} Devices {% endblock %}
+
 {% block content %}
     <h1>Devices</h1>
     <h2>Cameras</h2>
+    <table class="table table-hover">
+        <tr>
+            <th>Id</th>
+            <th>Camera Name</th>
+            <th>Description</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>Flash</th>
+            <th>Pic Interval</th>
+            <th>IP Address</th>
+            <th>Firmware</th>
+        </tr>
+    
     {% for device in cameras %}
-        Id: {{ device.id }}
-        Name: {{ device.device_name }}
-
+    <tr>
+        <td>Id: {{ device.id }}</td>
+        <td>Name: {{ device.device_name }}</td>
+        <td>Camera Description</td>
+        <td>Camera Location</td>
+        <td>
+            <div class="dropdown">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                    On
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">On</a></li>
+                    <li><a class="dropdown-item" href="#">Off</a></li>
+                </ul>
+            </div>
+        </td>
+        <td>
+            <div class="dropdown">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                    On
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">On</a></li>
+                    <li><a class="dropdown-item" href="#">Off</a></li>
+                </ul>
+            </div>
+        </td>
+        <td>Picture interval?</td>
+        <td>192.168.1.1</td>
+        <td>Firmware version</td>
+    </tr>
     {% endfor %}
-
+    </table> 
     <p>
         <a href="{% url 'devices:add-cam' %}">Add Camera Device</a>
     </p>

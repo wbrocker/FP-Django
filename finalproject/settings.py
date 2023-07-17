@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'imgcapture',
     'dash',
     'devices',
+    'bootstrap5',
 ]
 
 MIDDLEWARE = [

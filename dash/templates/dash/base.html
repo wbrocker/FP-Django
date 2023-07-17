@@ -1,6 +1,5 @@
 {% load static %}
 
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -9,6 +8,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="keywords" content="Friends, Social Media, Web Development">
         <meta name="author" content="Werner Brocker">
+
+        {% load bootstrap5 %} 
+        {% bootstrap_css %} 
+        {% bootstrap_javascript %}        
+
 
         <style>
             .image-container {
@@ -23,10 +27,27 @@
             }
         </style>
 
-        <title>Dashboard</title>
+        <title>{% block title %}Dashboard{% endblock %}</title>
 
     </head>
     <body>
 
+        <div class="container">
+            <ul class="nav bg-info">
+                <li class="nav-item">
+                    <a class="nav-link link-light" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link link-light" href="/images">Images</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link link-light" href="/devices">Devices</a>
+                </li>
+            </ul>
+        </div>
 
+        <div class="container pt-2">
         {% block content %} {% endblock %}
+        </div>
+    </body>
+    </html>

@@ -1,11 +1,7 @@
+{% extends "dash/base.html" %} 
+ {% block title %}Add Camera{% endblock %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Add Camera</title>
-</head>
-<body>
+
     <form method = "post" action="/devices/addcam/">
         
         {% csrf_token %}
