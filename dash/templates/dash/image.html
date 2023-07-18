@@ -1,5 +1,7 @@
 {% extends "dash/base.html" %} 
 
+{% block title %}Image{% endblock %} 
+
 {% block content %} 
 
     <table>
@@ -24,7 +26,7 @@
         </tr>
     </table>
     <div class="image-container">
-        <img src="{{ image.image.url }}" alt="Image">
+        <img src="{{ image.image.url }}" alt="Image" class="img-fluid">
         {% for detect in image.detection_data.detections %} 
             <!-- Only draw boundinx box if score > 0.5 -->
             {% for category in detect.categories %}

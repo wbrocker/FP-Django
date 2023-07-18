@@ -13,6 +13,13 @@
         {% bootstrap_css %} 
         {% bootstrap_javascript %}        
 
+        <!-- Script to load any Tooltips -->
+        <script>
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+              return new bootstrap.Tooltip(tooltipTriggerEl)
+            })
+        </script>
 
         <style>
             .image-container {
@@ -46,7 +53,7 @@
             </ul>
         </div>
 
-        <div class="container pt-2">
+        <div class="container pt-2 container-fluid">
         {% block content %} {% endblock %}
         </div>
     </body>

@@ -4,57 +4,53 @@
 
 {% block content %}
     <h1>Devices</h1>
-    <h2>Cameras</h2>
+    <h2>Cameras:</h2>
     <table class="table table-hover">
         <tr>
             <th>Id</th>
+            <th>Status</th>
             <th>Camera Name</th>
             <th>Description</th>
             <th>Location</th>
-            <th>Status</th>
             <th>Flash</th>
             <th>Pic Interval</th>
             <th>IP Address</th>
             <th>Firmware</th>
+            <th>Edit</th>
         </tr>
     
     {% for device in cameras %}
     <tr>
-        <td>Id: {{ device.id }}</td>
-        <td>Name: {{ device.device_name }}</td>
-        <td>Camera Description</td>
-        <td>Camera Location</td>
+        <td>{{ device.id }}</td>
         <td>
-            <div class="dropdown">
-                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
-                    On
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">On</a></li>
-                    <li><a class="dropdown-item" href="#">Off</a></li>
-                </ul>
-            </div>
+            <a href="{% url 'devices:setcamstatus' %}?device={{ device.id }}">
+            <button type="button" class="btn btn-outline-primary">
+            {{ device.device_status }}</button></a>
         </td>
+        <td>{{ device.device_name }}</td>
+        <td>{{ device.device_description }}</td>
+        <td>{{ device.device_location }}</td>
         <td>
-            <div class="dropdown">
-                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
-                    On
+            <a href="{% url 'devices:setcamflash' %}?device={{ device.id }}">
+                <button type="button" class="btn btn-outline-primary">
+                    {% if device.device_flash %}
+                        On
+                    {% else %}
+                        Off
+                    {% endif %}
                 </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">On</a></li>
-                    <li><a class="dropdown-item" href="#">Off</a></li>
-                </ul>
-            </div>
+            </a>
         </td>
-        <td>Picture interval?</td>
-        <td>192.168.1.1</td>
-        <td>Firmware version</td>
+        <td>{{ device.device_picinterval }}</td>
+        <td>{{ device.device_ip }}</td>
+        <td>{{ device.device_firmware }}</td>
+        <td><a href="{% url 'devices:edit-cam' device.id %}">Edit</a></td>
     </tr>
     {% endfor %}
     </table> 
     <p>
         <a href="{% url 'devices:add-cam' %}">Add Camera Device</a>
     </p>
-    <h2>Alerting Devices</h2>
+    <h2>Other Devices</h2>
 
 {% endblock %} 

@@ -1,22 +1,24 @@
 {% extends "dash/base.html" %} 
 
+{% block title %}Image List{% endblock %} 
+
 {% block content %} 
-    <table style="width: 70%;">
+    <table style="width: 70%;" class="table">
         <tr>
             <th>Id</th>
-            <th>Camera</th>
-            <th>Image</th>
-            <th>Created</th>
-            <th>Classified?</th>
-            <th>Identification</th>
-            <th>Other</th>
+            <th data-bs-toggle="tooltip" title="Camera that took pic">Camera</th>
+            <th data-bs-toggle="tooltip" title="Thumbnail">Image</th>
+            <th data-bs-toggle="tooltip" title="Image Creation date">Created</th>
+            <th data-bs-toggle="tooltip" title="Image Analysis">Classified</th>
+            <th data-bs-toggle="tooltip" title="What has been identified?">Identification</th>
+            <th>Delete</th>
         </tr>
     {% for image in images %} 
         <tr>
             <td>{{ image.id }}</td>
             <td>{{ image.cameraId }}</td>
             <td><a href="{% url 'dashboard:image' pk=image.id %}">
-                <img src="{{ image.image.url }}" height="200" width="200"></a></td>
+                <img src="{{ image.image.url }}" class="img-thumbnail" height="200" width="200"></a></td>
             <td>{{ image.created }}</td>
             <td>{{ image.analyzed }}</td>
             <td>

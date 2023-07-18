@@ -7,7 +7,7 @@ class ActiveCamera(models.Model):
     device_description = models.CharField(max_length=255, default='')
     device_location = models.CharField(max_length=100, default='Unknown')
     device_flash = models.BooleanField(default=True)
-    device_status = models.BooleanField(default=True)
+    device_status = models.CharField(max_length=10, default='Unknown')
     device_picinterval = models.IntegerField(default=1000)
     device_ip = models.CharField(max_length=15, default='0.0.0.0')
     device_firmware = models.CharField(max_length=20, default='')

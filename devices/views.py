@@ -1,10 +1,14 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+
 
 from . import views
 from .models import ActiveCamera
 
 from .forms import ActiveCameraForm
+
+from .utils import getCameraSettings, setCameraSettings
 
 def index(request):
 
@@ -38,3 +42,62 @@ def addCamera(request):
         form = ActiveCameraForm()
 
     return render(request, 'devices/addcam.html', {'form': form})
+
+# Form to edit device
+def editCam(request, pk):
+    cam = get_object_or_404(ActiveCamera, id=pk)
+
+    if request.method == 'GET':
+        context = {'form': ActiveCameraForm(instance=cam), 'id': pk}
+        return render(request, 'devices/editcam.html', context)
+    
+    elif request.method == 'POST':
+        form = ActiveCameraForm(request.POST, instance=cam)
+        if form.is_valid():
+            form.save()
+
+            # Here I need to call a function to update the Cam Settings!
+            # getCameraSettings(pk)
+            
+            setCameraSettings(pk)
+            return redirect('devices:device-home')
+        else:
+            return render(request, 'devices/editcam.html', {'form':form})
+        
+# Change the Camera status
+def setCamStatus(request):
+    if request.method == 'GET':
+        device_id = request.GET.get('device')
+        cam = get_object_or_404(ActiveCamera, id=device_id)
+
+        if cam.device_status == 'Active':
+            cam.device_status = 'Inactive'
+            # Update Camera
+
+        elif cam.device_status == 'Inactive':
+            cam.device_status = 'Active'
+            # Update Camera
+
+        cam.save()
+        setCameraSettings(device_id)
+
+    return redirect('devices:device-home')
+
+# Change the Camera Flash
+def setCamFlash(request):
+    device_id = request.GET.get('device')
+    cam = get_object_or_404(ActiveCamera, id=device_id)
+
+    if cam.device_flash == True:
+            cam.device_flash = False
+            # Update Camera
+
+    elif cam.device_flash == False:
+        cam.device_flash = True
+        # Update Camera
+
+    cam.save()
+    
+    setCameraSettings(device_id)
+
+    return redirect('devices:device-home')
