@@ -17,6 +17,7 @@
             <th>IP Address</th>
             <th>Firmware</th>
             <th>Edit</th>
+            <th>Delete</th>
         </tr>
     
     {% for device in cameras %}
@@ -44,12 +45,13 @@
         <td>{{ device.device_picinterval }}</td>
         <td>{{ device.device_ip }}</td>
         <td>{{ device.device_firmware }}</td>
-        <td><a href="{% url 'devices:edit-cam' device.id %}">Edit</a></td>
+        <td><a class="btn btn-primary" href="{% url 'devices:edit-cam' device.id %}">Edit</a></td>
+        <td><a class="btn btn-danger" href="#">Delete</a></td>
     </tr>
     {% endfor %}
     </table> 
     <p>
-        <a href="{% url 'devices:add-cam' %}">Add Camera Device</a>
+        <a class="btn btn-success" href="{% url 'devices:add-cam' %}">Add Device</a>
     </p>
     <h2>Other Devices</h2>
 

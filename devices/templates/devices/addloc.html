@@ -4,12 +4,23 @@
 
 {% block content %} 
 
-    <form method = "post" action="/devices/addlocation/">
-        <div class="mb-3 mt-3">
-            {% csrf_token %}
-            {{ form.as_p }}
+    <form method = "post" action="/devices/addlocation/" class="my-5">
+        {% csrf_token %}
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="mb-3">
+                        <label for="id_name" class="form-label">Name</label>
+                        <input type="text" name="name" class="form-control" id="id_name" value="{{ form.name.value }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_description" class="form-label">Description</label>
+                        <input type="text" name="description" class="form-control" id="id_description" value="{{ form.description.value }}">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 
 {% endblock %}
