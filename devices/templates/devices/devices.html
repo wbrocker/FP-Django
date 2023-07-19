@@ -20,21 +20,21 @@
             <th>Delete</th>
         </tr>
     
-    {% for device in cameras %}
+    {% for device in devices %}
     <tr>
         <td>{{ device.id }}</td>
         <td>
             <a href="{% url 'devices:setcamstatus' %}?device={{ device.id }}">
             <button type="button" class="btn btn-outline-primary">
-            {{ device.device_status }}</button></a>
+            {{ device.status }}</button></a>
         </td>
-        <td>{{ device.device_name }}</td>
-        <td>{{ device.device_description }}</td>
-        <td>{{ device.device_location }}</td>
+        <td>{{ device.name }}</td>
+        <td>{{ device.description }}</td>
+        <td>{{ device.location }}</td>
         <td>
             <a href="{% url 'devices:setcamflash' %}?device={{ device.id }}">
                 <button type="button" class="btn btn-outline-primary">
-                    {% if device.device_flash %}
+                    {% if device.status.flash %}
                         On
                     {% else %}
                         Off
@@ -42,14 +42,21 @@
                 </button>
             </a>
         </td>
-        <td>{{ device.device_picinterval }}</td>
-        <td>{{ device.device_ip }}</td>
-        <td>{{ device.device_firmware }}</td>
+        <td>{{ device.data.picInterval }}</td>
+        <td>{{ device.ip }}</td>
+        <td>{{ device.firmware }}</td>
         <td><a class="btn btn-primary" href="{% url 'devices:edit-cam' device.id %}">Edit</a></td>
         <td><a class="btn btn-danger" href="#">Delete</a></td>
     </tr>
     {% endfor %}
     </table> 
+    {% for device in devices %}
+        <p>{{ device.ip }}</p>
+        <p>{{ device.status }}</p>
+        <p>{{ device.data }}</p>
+
+    {% endfor %}
+
     <p>
         <a class="btn btn-success" href="{% url 'devices:add-cam' %}">Add Device</a>
     </p>

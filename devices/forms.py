@@ -1,5 +1,5 @@
 from django import forms
-from .models import ActiveCamera, Locations
+from .models import ActiveCamera, Locations, ActiveDevices
 
 class ActiveCameraForm(forms.ModelForm):
 
@@ -7,6 +7,13 @@ class ActiveCameraForm(forms.ModelForm):
         model = ActiveCamera
         fields = "__all__"
         exclude = ["device_firmware"]
+
+class DeviceForm(forms.ModelForm):
+
+    class Meta:
+        model = ActiveDevices
+        fields = "__all__"
+        exclude = ["firmware"]
 
 class LocationForm(forms.ModelForm):
 

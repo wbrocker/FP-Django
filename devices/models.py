@@ -19,6 +19,9 @@ class Locations(models.Model):
     name = models.CharField(max_length=100, default='')
     description = models.CharField(max_length=255, default='')
 
+    def __str__(self):
+        return self.name
+
 class ActiveDevices(models.Model):
     
     class Type(models.TextChoices):
