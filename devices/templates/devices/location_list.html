@@ -1,0 +1,33 @@
+{% extends "dash/base.html" %} 
+
+{% block title %} Locations {% endblock %}
+
+{% block content %}
+    <h1>Locations</h1>
+    <table class="table table-hover">
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Show Linked Devices</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        {% for location in locations %}
+            <tr>
+                <td>{{ location.id }}</td>
+                <td>{{ location.name }}</td>
+                <td>{{ location.description }}</td>
+                <td><a href="#" class="btn btn-primary">Linked Devices</a></td>
+                <td><a href="{% url 'devices:edit-loc' pk=location.id %}" class="btn btn-primary">Edit</a></td>
+                <td><a href="{% url 'devices:del-loc' location.pk %}" class="btn btn-danger">Delete</a></td>
+
+            </tr>
+        {% endfor %}
+    </table> 
+    <p>
+        <a href="{% url 'devices:add-loc' %}">Add Location</a>
+    </p>
+
+
+{% endblock %} 

@@ -4,9 +4,9 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 from . import views
-from .models import ActiveCamera
+from .models import ActiveCamera, Locations, ActiveDevices
 
-from .forms import ActiveCameraForm
+from .forms import ActiveCameraForm, LocationForm
 
 from .utils import getCameraSettings, setCameraSettings
 
@@ -77,6 +77,13 @@ def setCamStatus(request):
         elif cam.device_status == 'Inactive':
             cam.device_status = 'Active'
             # Update Camera
+        
+        elif cam.device_status == 'Error':
+            if getCameraSettings(device_id):
+                print("Device is active")
+                cam.device_status = 'Active'
+            else:
+                print("Cam is still inactive")
 
         cam.save()
         setCameraSettings(device_id)
@@ -119,3 +126,57 @@ def registerDevice(request):
     print("Device Hostname: " + hostname)
 
     return HttpResponse(ip_addr + " " + hostname + " " + deviceType)
+
+def LocationList(request):
+    """
+    View to list locations / rooms / areas.
+    """
+    locations = Locations.objects.all()
+    print(locations)
+    return render(request,
+                'devices/location_list.html',
+                {'locations': locations})
+
+def AddLocation(request):
+
+    if request.method == 'POST':
+        form = LocationForm(request.POST)
+    
+        if form.is_valid():
+            instance = form.save()
+
+            return redirect('devices:locations')
+        
+        else:
+            print(form.errors)
+
+    else:
+        form = LocationForm()
+
+    return render(request, 'devices/addloc.html',
+                  {'form': form})
+
+def EditLocation(request, pk):
+    location = get_object_or_404(Locations, pk=pk)
+
+    if request.method == 'POST':
+        loc_form = LocationForm(request.POST, instance=location)
+        
+        if loc_form.is_valid():
+            loc_form.save()
+            return redirect('devices:locations')
+    else:
+        loc_form = LocationForm(instance=location)
+    
+    return render(request, 
+                    'devices/editloc.html',
+                    {'form': loc_form})
+
+def DeleteLocation(request, pk):
+    location = get_object_or_404(Locations, pk=pk)
+
+    if request.method == 'POST':
+        location.delete()
+        return redirect('devices:locations')
+    
+    return render(request, 'devices/del_loc.html', {'location': location})

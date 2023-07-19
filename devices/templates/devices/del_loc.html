@@ -1,0 +1,16 @@
+{% extends "dash/base.html" %} 
+
+{% block title %}Delete Location{% endblock %}
+
+{% block content %} 
+
+    <h1>Delete Location</h1>
+    <p>Are you sure you want to delete the locations "{{ location.name }}"?</p>
+    <form method = "post">
+        <div class="mb-3 mt-3">
+            {% csrf_token %}
+            <button class="btn btn-danger" type="submit">Delete</button>
+        </div>
+    </form>
+
+{% endblock %}

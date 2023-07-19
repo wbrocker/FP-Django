@@ -13,6 +13,7 @@ def getCameraSettings(id):
     """
     instance = ActiveCamera.objects.get(pk=id)
     ip_addr = instance.device_ip
+    active = False
 
     # Ensure the connection is handled if camera is
     # no available at the specified IP.
@@ -30,12 +31,15 @@ def getCameraSettings(id):
             instance.device_status = "Inactive"
 
         instance.save()
+        active = True
 
     except:
         print("Error Connecting to Camera!")
         instance.device_status = "Error"
+        active = False
 
         instance.save()
+    return active
 
 
 def setCameraSettings(id):

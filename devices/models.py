@@ -15,7 +15,41 @@ class ActiveCamera(models.Model):
     device_created = models.DateTimeField(auto_now_add=True)
     device_updated = models.DateTimeField(auto_now=True)
 
+class Locations(models.Model):
+    name = models.CharField(max_length=100, default='')
+    description = models.CharField(max_length=255, default='')
 
+class ActiveDevices(models.Model):
+    
+    class Type(models.TextChoices):
+        CAM = 'CAM', 'Camera'
+        SENSOR = 'SEN', 'Sensor'
+
+    class Status(models.TextChoices):
+        ACTIVE = 'ACT', 'Active'
+        INACTIVE = 'INA', 'Inactive'
+        DISCOVERED = 'DIS', 'Discovered'
+        UNKNOWN = 'UNK', 'Unknown'
+
+    type = models.CharField(max_length=3,
+                            choices=Type.choices,
+                            default=Type.CAM)
+    name = models.CharField(max_length=100, default='No Name')
+    description = models.CharField(max_length=255, default='')
+    location = models.ForeignKey(Locations,
+                                 on_delete=models.RESTRICT,
+                                 related_name='devices')
+    status = models.CharField(max_length=3,
+                              choices=Status.choices,
+                              default=Status.DISCOVERED)
+    data = models.JSONField(null=True)
+    ip = models.CharField(max_length=20, default='0.0.0.0')
+    firmware = models.CharField(max_length=20, default='')
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.status
 
 # class ActiveDevices(models.Model):
 #     class DeviceChoices(models.TextChoices):
