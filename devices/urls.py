@@ -10,4 +10,5 @@ urlpatterns = [
     path('edit_cam/<int:pk>/', views.editCam, name='edit-cam'),
     path('setcamstatus/', views.setCamStatus, name='setcamstatus'),
     path('setcamflash/', views.setCamFlash, name='setcamflash'),
+    path('register/', views.registerDevice, name='register-device'),
 ]

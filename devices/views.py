@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
@@ -101,3 +101,21 @@ def setCamFlash(request):
     setCameraSettings(device_id)
 
     return redirect('devices:device-home')
+
+def registerDevice(request):
+    """
+    Function to register new devices, or for existing
+    devices to pull the recent configration.
+    """
+    # Determine the IP and Hostname
+    ip_addr = request.GET.get('ip')
+    hostname = request.GET.get('host')
+    if request.GET.get('type') is not None:
+        deviceType = request.GET.get('type')
+    else: 
+       deviceType = "None" 
+
+    print("Device IP: " + ip_addr )
+    print("Device Hostname: " + hostname)
+
+    return HttpResponse(ip_addr + " " + hostname + " " + deviceType)
