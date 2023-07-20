@@ -33,12 +33,13 @@ class ActiveDevices(models.Model):
         INACTIVE = 'INA', 'Inactive'
         DISCOVERED = 'DIS', 'Discovered'
         UNKNOWN = 'UNK', 'Unknown'
+        ERROR = "ERR", "Error"
 
     type = models.CharField(max_length=3,
                             choices=Type.choices,
                             default=Type.CAM)
     name = models.CharField(max_length=100, default='No Name')
-    description = models.CharField(max_length=255, default='')
+    description = models.CharField(max_length=255, default='', null=True, blank=True)
     location = models.ForeignKey(Locations,
                                  on_delete=models.RESTRICT,
                                  related_name='devices')

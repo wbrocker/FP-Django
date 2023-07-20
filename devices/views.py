@@ -15,8 +15,12 @@ def index(request):
     return HttpResponse("Devices Page")
 
 
-# Function to show devices
 def deviceList(request):
+    """
+    View that will list all the available
+    devices
+    """
+
     camera_devices = ActiveCamera.objects.all().order_by('id')
     all_devices = ActiveDevices.objects.all().order_by('type')
 
@@ -66,15 +70,18 @@ def AddDevice(request):
     return render(request, 'devices/adddevice.html', {'form': form})
 
 # Form to edit device
-def editCam(request, pk):
-    cam = get_object_or_404(ActiveCamera, id=pk)
+def EditCam(request, pk):
+    # cam = get_object_or_404(ActiveCamera, id=pk)
+    cam = get_object_or_404(ActiveDevices, id=pk)
 
     if request.method == 'GET':
-        context = {'form': ActiveCameraForm(instance=cam), 'id': pk}
+        # context = {'form': ActiveCameraForm(instance=cam), 'id': pk}
+        context = {'form': DeviceForm(instance=cam), 'id': pk}
         return render(request, 'devices/editcam.html', context)
     
     elif request.method == 'POST':
-        form = ActiveCameraForm(request.POST, instance=cam)
+        # form = ActiveCameraForm(request.POST, instance=cam)
+        form = DeviceForm(request.POST, instance=cam)
         if form.is_valid():
             form.save()
 
@@ -90,43 +97,53 @@ def editCam(request, pk):
 def setCamStatus(request):
     if request.method == 'GET':
         device_id = request.GET.get('device')
-        cam = get_object_or_404(ActiveCamera, id=device_id)
+        # cam = get_object_or_404(ActiveCamera, id=device_id)
+        cam = get_object_or_404(ActiveDevices, id=device_id)
+        update = False
 
-        if cam.device_status == 'Active':
-            cam.device_status = 'Inactive'
-            # Update Camera
+        if cam.status == 'ACT':
+            cam.status = 'INA'
+            update = True
 
-        elif cam.device_status == 'Inactive':
-            cam.device_status = 'Active'
-            # Update Camera
+        elif cam.status == 'INA':
+            cam.status = 'ACT'
+            update = True
         
-        elif cam.device_status == 'Error':
+        elif cam.status == 'ERR':
             if getCameraSettings(device_id):
                 print("Device is active")
-                cam.device_status = 'Active'
+                cam.status = 'ACT'
+                update = True
             else:
                 print("Cam is still inactive")
+                # Cam NOT active, no need to update
+                update = False
 
         cam.save()
-        setCameraSettings(device_id)
+        # Update the Camera with new settings if Cam Available
+        if update:
+            setCameraSettings(device_id)
 
     return redirect('devices:device-home')
 
 # Change the Camera Flash
 def setCamFlash(request):
     device_id = request.GET.get('device')
-    cam = get_object_or_404(ActiveCamera, id=device_id)
+    # cam = get_object_or_404(ActiveCamera, id=device_id)
+    cam = get_object_or_404(ActiveDevices, id=device_id)
 
-    if cam.device_flash == True:
-            cam.device_flash = False
-            # Update Camera
+    # Read JSON data
+    data_dict = cam.data
 
-    elif cam.device_flash == False:
-        cam.device_flash = True
-        # Update Camera
+    if data_dict["flash"] == True:
+        data_dict["flash"] = False
+
+    elif data_dict["flash"] == False:
+        data_dict["flash"] = True
 
     cam.save()
     
+    # Update the Camera
     setCameraSettings(device_id)
 
     return redirect('devices:device-home')
@@ -174,9 +191,6 @@ def registerDevice(request):
                                    status=ActiveDevices.Status.DISCOVERED,
                                    data=data_json)
         new_device.save()
-
-    # print("Device IP: " + ip_addr )
-    # print("Device Hostname: " + hostname)
 
     return HttpResponse(json.dumps(data_json))
 
