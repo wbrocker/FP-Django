@@ -89,24 +89,5 @@ def detect(pk, model: str):
     image_detection.analyzed = True
     image_detection.detection_data = serialized_data
     image_detection.save()
-
-    # detected_objects = []
-    # for detection in detections:
-    #     bounding_box = detection.bounding_box
-    #     category = detection.categories
-        
-
-    #     detected_objects.append({
-    #         'bounding_box': bounding_box,
-    #         'category': category
-    #     })
-
-    # for obj in detected_objects:
-    #     print(f"Categories: {obj['category']}, Bounding Box: {obj['bounding_box']}")
-    #     print(f"{obj['category.score'] }")
-
-    # print(detection_result[..., :4])
-
-    # print(detection_result)
     
     return detection_result
