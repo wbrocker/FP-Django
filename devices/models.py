@@ -38,7 +38,7 @@ class ActiveDevices(models.Model):
     type = models.CharField(max_length=3,
                             choices=Type.choices,
                             default=Type.CAM)
-    name = models.CharField(max_length=100, default='No Name')
+    name = models.CharField(max_length=100, default='No Name', null=True, blank=True)
     description = models.CharField(max_length=255, default='', null=True, blank=True)
     location = models.ForeignKey(Locations,
                                  on_delete=models.RESTRICT,

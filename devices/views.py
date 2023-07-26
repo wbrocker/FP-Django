@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 
@@ -28,6 +28,16 @@ def deviceList(request):
                   'devices/devices.html',
                   {'cameras': camera_devices,
                    'devices': all_devices})
+
+def DelDevice(request, pk):
+    """
+    Delete Device From DB
+    """
+    device = ActiveDevices.objects.get(id=pk)
+
+    device.delete()
+
+    return redirect('devices:device-home')
 
 
 # Form to add Camera Device
@@ -93,6 +103,34 @@ def EditCam(request, pk):
         else:
             return render(request, 'devices/editcam.html', {'form':form})
         
+# form to Edit Devices
+def EditDevice(request, pk):
+    device = get_object_or_404(ActiveDevices, id=pk)
+
+    if request.method == 'GET':
+        form = DeviceForm(instance=device)
+
+        context = {'form': form, 'id': pk}
+        # context = {'form': DeviceForm(instance=device), 'id': pk}
+        # form.fields['device.ip'].widget.attrs['readonly'] = True
+
+        return render(request, 'devices/edit_device.html', context)
+    
+    elif request.method == 'POST':
+        form = DeviceForm(request.POST, instance=device)
+        
+        if form.is_valid():
+            form.save()
+
+            if device.type == 'CAM':
+                setCameraSettings(pk)
+                return redirect('devices:device-home')
+            
+        else:
+            return render(request, 'devices/edit_device.html', {'form': form})
+
+    return redirect('devices:device-home')
+        
 # Change the Camera status
 def setCamStatus(request):
     if request.method == 'GET':
@@ -109,7 +147,7 @@ def setCamStatus(request):
             cam.status = 'ACT'
             update = True
         
-        elif cam.status == 'ERR':
+        elif cam.status == 'ERR' or cam.status == 'DIS':
             if getCameraSettings(device_id):
                 print("Device is active")
                 cam.status = 'ACT'
@@ -126,10 +164,29 @@ def setCamStatus(request):
 
     return redirect('devices:device-home')
 
+def setDeviceStatus(request):
+    if request.method == 'GET':
+        device_id = request.GET.get('device')
+
+        device = get_object_or_404(ActiveDevices, id=device_id)
+
+        if device.type == 'SEN':
+            if device.status == 'INA' or device.status == 'DIS' or device.status == 'ERR':
+                device.status = 'ACT'
+            elif device.status == 'ACT':
+                device.status = 'INA'
+
+        device.save()
+
+        # Update the device with new settings
+        setDeviceSettings(device_id)
+
+    return redirect('devices-home')
+
+
 # Change the Camera Flash
 def setCamFlash(request):
     device_id = request.GET.get('device')
-    # cam = get_object_or_404(ActiveCamera, id=device_id)
     cam = get_object_or_404(ActiveDevices, id=device_id)
 
     # Read JSON data
@@ -148,6 +205,8 @@ def setCamFlash(request):
 
     return redirect('devices:device-home')
 
+
+@csrf_exempt
 def registerDevice(request):
     """
     Function to register new devices, or for existing
@@ -159,6 +218,7 @@ def registerDevice(request):
     ip_addr = request.GET.get('ip')
     hostname = request.GET.get('host')
     type_value = request.GET.get('type')
+    firmware = request.GET.get('firmware')
 
     data = ""
     # if request.GET.get('type') is not None:
@@ -166,13 +226,26 @@ def registerDevice(request):
     # else: 
     #    deviceType = "None" 
 
-    # Determine if the object is in the DB
+    # Determine if the object is in the DB, update the Firmware
+    # and respond with the current config.
     try:
         device = ActiveDevices.objects.get(ip=ip_addr)
+        print("Device Exists!")
         if device.data is None:
             return HttpResponse(json.dumps("{'Error':'JSON Error'}"))
+        else:
+            device.firmware = firmware
+
+            # If it's a Camera, determine correct status
+            if device.type == 'CAM':
+                if device.status == 'INA':
+                    device.data['camStatus'] = False
+                elif device.status == 'ACT':
+                    device.data['camStatus'] = True
+            device.save()
         # If this exists, return the settings to the device.
-        return HttpResponse(json.dumps(device.data)) if device.data else None
+        # return HttpResponse(json.dumps(device.data)) if device.data else None
+        return JsonResponse(device.data)
 
     except ActiveDevices.DoesNotExist:
         # This new device does not exist in the DB. Create a new record.    
@@ -180,19 +253,25 @@ def registerDevice(request):
         
         if type_value == 'CAM':
             # Insert Defaults
-            data_json = json.loads('{"cameraid": 2,"flash": false,"picInterval": 200,"camStatus": false,"firmware": "0.13"}')
+            data_json = json.loads('{"cameraid": 2,"flash": false,"picInterval": 200,"camStatus": false,"firmware": "0.13","sleep": false}')
+
         elif type_value == 'SEN':
-            data_json = json.loads('{"sensorid": 2, "alarm": 1}')
+            data_json = json.loads('{"sensorid": "5", "alarm": "1"}')
 
         new_device = ActiveDevices(ip=ip_addr, 
                                    name=hostname, 
                                    type=type_value, 
                                    location=location, 
                                    status=ActiveDevices.Status.DISCOVERED,
-                                   data=data_json)
+                                   data=data_json,
+                                   firmware=firmware)
         new_device.save()
 
-    return HttpResponse(json.dumps(data_json))
+    # return HttpResponse(json.dumps(data_json))
+    response = JsonResponse(data_json)
+    response['Content-Type'] = "application/json"
+
+    return response 
 
 
 def LocationList(request):
@@ -205,14 +284,16 @@ def LocationList(request):
                 'devices/location_list.html',
                 {'locations': locations})
 
-def AddLocation(request):
 
+def AddLocation(request):
+    """
+    Add Locations
+    """
     if request.method == 'POST':
         form = LocationForm(request.POST)
     
         if form.is_valid():
             instance = form.save()
-
             return redirect('devices:locations')
         
         else:
@@ -224,7 +305,11 @@ def AddLocation(request):
     return render(request, 'devices/addloc.html',
                   {'form': form})
 
+
 def EditLocation(request, pk):
+    """
+    Edit Locations
+    """
     location = get_object_or_404(Locations, pk=pk)
 
     if request.method == 'POST':
@@ -240,7 +325,11 @@ def EditLocation(request, pk):
                     'devices/editloc.html',
                     {'form': loc_form})
 
+
 def DeleteLocation(request, pk):
+    """
+    Delete Locations from DB
+    """
     location = get_object_or_404(Locations, pk=pk)
 
     if request.method == 'POST':

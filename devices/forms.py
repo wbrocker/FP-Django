@@ -13,7 +13,17 @@ class DeviceForm(forms.ModelForm):
     class Meta:
         model = ActiveDevices
         fields = "__all__"
-        exclude = ["firmware"]
+        exclude = ['type', 'firmware', 'status', 'data']
+        # readonly_fields = ('type', 'ip',)
+
+    # picInterval = forms.IntegerField(label='Picture Interval', required=True)
+    # flash = forms.BooleanField(label='Flash', required=True)
+    
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+
+    #     self.fields['type'].widget.attrs['readonly'] = True
+    #     self.fields['ip'].widget.attrs['readonly'] = True
 
 class LocationForm(forms.ModelForm):
 

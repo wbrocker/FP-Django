@@ -27,7 +27,7 @@ def getCameraSettings(id):
 
         data_dict["flash"] = result_json['flash']
         data_dict["picinterval"] = result_json['picInterval']
-        data_dict["firmwre"] = result_json['firmware']
+        data_dict["firmware"] = result_json['firmware']
         if result_json['camStatus'] == 1:
             instance.status = "ACT"
         elif result_json['camStatus'] == 0:
@@ -56,21 +56,18 @@ def setCameraSettings(id):
     data_dict = cam.data
 
     # Ensure the mapping is correct.
+    # camStatus should be sent in JSON, but stored
+    # as status variable in DB.
     if cam.status == 'ACT':
-        camStatus = 1
+        data_dict["camStatus"] = True 
     else: 
-        camStatus = 0
+        data_dict["camStatus"] = False
 
     # Define URL for Device
     url = "http://" + cam.ip + "/setdata"
 
     payload = data_dict
 
-    # payload = {
-    #     "flash": instance.device_flash,
-    #     "picInterval": instance.device_picinterval,
-    #     "camStatus": camStatus
-    # }
     try:
         response = requests.post(url, json=payload)
     except:
@@ -78,5 +75,14 @@ def setCameraSettings(id):
         cam.status = "ERR"
         cam.save()
 
+def setDeviceSettings(id):
+    """
+    Set the settings from the DB
+    """
+    device = ActiveDevices.objects.get(id=id)
 
-    
+    # Read the JSON
+    data_dict = device.data
+
+    if device.status == 'ACT':
+        data_dict

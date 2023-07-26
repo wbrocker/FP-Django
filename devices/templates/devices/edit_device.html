@@ -1,0 +1,15 @@
+{% extends "dash/base.html" %} 
+
+{% block title %}Edit Camera{% endblock %}
+
+{% block content %} 
+
+    <form method = "post" novalidate>
+        <div class="mb-3 mt-3">
+            {% csrf_token %}
+            {{ form.as_p }}
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+
+    {% endblock %}
