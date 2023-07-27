@@ -4,9 +4,9 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 
 from . import views
-from .models import ActiveCamera, Locations, ActiveDevices
+from .models import Locations, ActiveDevices
 
-from .forms import ActiveCameraForm, LocationForm, DeviceForm
+from .forms import LocationForm, DeviceForm
 
 from .utils import getCameraSettings, setCameraSettings
 
@@ -21,13 +21,14 @@ def deviceList(request):
     devices
     """
 
-    camera_devices = ActiveCamera.objects.all().order_by('id')
+    # camera_devices = ActiveCamera.objects.all().order_by('id')
     all_devices = ActiveDevices.objects.all().order_by('type')
 
     return render(request,
                   'devices/devices.html',
-                  {'cameras': camera_devices,
-                   'devices': all_devices})
+                  {
+                   'devices': all_devices
+                   })
 
 def DelDevice(request, pk):
     """

@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 import requests
 import json
 
-from .models import ActiveCamera, ActiveDevices
+from .models import ActiveDevices
 
 def getCameraSettings(id):
     """

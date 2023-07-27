@@ -1,12 +1,12 @@
 from django import forms
-from .models import ActiveCamera, Locations, ActiveDevices
+from .models import Locations, ActiveDevices
 
-class ActiveCameraForm(forms.ModelForm):
+# class ActiveCameraForm(forms.ModelForm):
 
-    class Meta:
-        model = ActiveCamera
-        fields = "__all__"
-        exclude = ["device_firmware"]
+#     class Meta:
+#         model = ActiveCamera
+#         fields = "__all__"
+#         exclude = ["device_firmware"]
 
 class DeviceForm(forms.ModelForm):
 
