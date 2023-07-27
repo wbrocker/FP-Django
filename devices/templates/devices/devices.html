@@ -62,6 +62,8 @@
             <th>Camera Name</th>
             <th>Description</th>
             <th>Location</th>
+            <th>Temperature</th>
+            <th>Humidity</th>
             <th>IP Address</th>
             <th>Firmware</th>
             <th>Edit</th>
@@ -70,10 +72,13 @@
     {% for device in devices %}
     {% if device.type == 'SEN' %}
         <tr>
-            <td>{{ device.get_status_display }}</td>
+            <td><button type="button" class="btn btn-outline-primary">
+                {{ device.get_status_display }}</button></td>
             <td>{{ device.name }}</td>
             <td>{{ device.description }}</td>
             <td>{{ device.location }}</td>
+            <td>{{ device.data.temperature }}&deg;C</td>
+            <td>{{ device.data.humidity }}%</td>
             <td>{{ device.ip }}</td>
             <td>{{ device.firmware }}</td>
             <td><a class="btn btn-primary" href="{% url 'devices:edit-device' device.id %}">Edit</a></td>

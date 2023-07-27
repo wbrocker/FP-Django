@@ -222,10 +222,6 @@ def registerDevice(request):
     firmware = request.GET.get('firmware')
 
     data = ""
-    # if request.GET.get('type') is not None:
-    #     deviceType = request.GET.get('type')
-    # else: 
-    #    deviceType = "None" 
 
     # Determine if the object is in the DB, update the Firmware
     # and respond with the current config.
@@ -243,6 +239,9 @@ def registerDevice(request):
                     device.data['camStatus'] = False
                 elif device.status == 'ACT':
                     device.data['camStatus'] = True
+                device.data['cameraid'] = device.pk 
+            elif device.type == 'SEN':
+                device.data['sensorid'] = device.pk
             device.save()
         # If this exists, return the settings to the device.
         # return HttpResponse(json.dumps(device.data)) if device.data else None
@@ -257,7 +256,7 @@ def registerDevice(request):
             data_json = json.loads('{"cameraid": 2,"flash": false,"picInterval": 200,"camStatus": false,"firmware": "0.13","sleep": false}')
 
         elif type_value == 'SEN':
-            data_json = json.loads('{"sensorid": "5", "alarm": "1"}')
+            data_json = json.loads('{"sensorid": "5", "alarm": "0", "temperature": 0, "humidity": 0, "alarmtrigger": 0}')
 
         new_device = ActiveDevices(ip=ip_addr, 
                                    name=hostname, 
@@ -267,6 +266,14 @@ def registerDevice(request):
                                    data=data_json,
                                    firmware=firmware)
         new_device.save()
+        primary_key = new_device.pk
+        print("Primary Key: " + str(primary_key))
+
+        # Update the Device ID to be sent.
+        if type_value == 'SEN':
+            data_json['sensorid'] = primary_key
+        elif type_value == 'CAM':
+            data_json['cameraid'] = primary_key
 
     # return HttpResponse(json.dumps(data_json))
     response = JsonResponse(data_json)

@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'dash',
     'devices',
     'bootstrap5',
+    'mqtt',
 ]
 
 MIDDLEWARE = [
@@ -139,3 +140,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Media Variables
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+# MQTT Configuration
+MQTT_SERVER = '192.168.1.35'
+MQTT_PORT = 1883
+MQTT_KEEPALIVE = 60
+MQTT_USER = ''
+MQTT_PASSWORD = ''
