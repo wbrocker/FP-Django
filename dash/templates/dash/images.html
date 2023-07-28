@@ -59,6 +59,18 @@
     </table>
 
     <!-- Disply the pagination links -->
+
+    <ul class="pagination justify-content-center">
+        {% if images.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ images.previous_page_number }}">{{ images.previous_page_number }}</a></li>
+        {% endif %} 
+        {% if images.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ images.next_page_number }}">{{ images.next_page_number }}</a></li>
+        {% endif %}
+
+
+      </ul>
+
     <div class="pagination">
         <span class="step-links">
             {% if images.has_previous %}
@@ -72,7 +84,7 @@
 
             {% if images.has_next %}
                 <a href="?page={{ images.next_page_number }}">next</a>
-                <a href="?page={{ iamges.paginator.num_pages }}">last &raquo;</a>
+                <a href="?page={{ images.paginator.num_pages }}">last &raquo;</a>
             {% endif %}
         </span>
     </div>

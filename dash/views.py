@@ -15,7 +15,7 @@ def index(request):
 # Function to return all images captured.
 def imageList(request):
     all_images = ImageDetection.objects.all().order_by('-created')
-    paginator = Paginator(all_images, 20)                       # 10 Images per page
+    paginator = Paginator(all_images, 10)                       # 10 Images per page
     page = request.GET.get('page')
 
     for image in all_images:
