@@ -40,6 +40,25 @@ def delete_image(request, pk):
 
     return redirect('dashboard:image-list')
 
+def delete_all(request):
+    """
+    Delete all images apart from 
+    the pictures marked as DND
+    """
+    images_to_delete = ImageDetection.objects.filter(dnd=False)
+
+    # Delete images one at a time
+    for image in images_to_delete:
+        image.image.delete()                # Delete the image from storage
+        # image_path = image.image.path
+        image.delete()                      # Delete the image form the DB
+
+        # Remove image from storage
+        # if os.path.exists(image_path):
+        #     os.remove(image_path)
+
+    return redirect('dashboard:image-list')
+
 
 # csrf exempt to ensure easier upload from the ESP32-Cam
 @csrf_exempt
