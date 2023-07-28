@@ -47,17 +47,19 @@ def delete_all(request):
     """
     images_to_delete = ImageDetection.objects.filter(dnd=False)
 
-    # Delete images one at a time
-    for image in images_to_delete:
-        image.image.delete()                # Delete the image from storage
-        # image_path = image.image.path
-        image.delete()                      # Delete the image form the DB
+    if request.method == 'POST':
 
-        # Remove image from storage
-        # if os.path.exists(image_path):
-        #     os.remove(image_path)
+        # Delete images one at a time
+        for image in images_to_delete:
+            image.image.delete()                # Delete the image from storage
+            image.delete()                      # Delete the image form the DB
 
-    return redirect('dashboard:image-list')
+        return redirect('dashboard:image-list')
+    
+    else:
+        return render(request, 'imgcapture/del_all.html')
+
+    
 
 
 # csrf exempt to ensure easier upload from the ESP32-Cam

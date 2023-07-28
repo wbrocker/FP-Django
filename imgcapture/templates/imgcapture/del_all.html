@@ -1,0 +1,17 @@
+{% extends "dash/base.html" %} 
+
+{% block title %}Delete All Images{% endblock %}
+
+{% block content %} 
+<div class="text-center">
+    <h1>Delete All Images</h1>
+    <p>Are you sure you want to delete all the Images"?</p>
+    <form method = "post">
+        <div class="mb-3 mt-3">
+            {% csrf_token %}
+            <button class="btn btn-danger" type="submit">Delete</button>
+        </div>
+    </form>
+    <p class="text-sm-center fs-6 fst-italic">Images marked as "DND" will NOT be removed.</p>
+</div>
+{% endblock %}

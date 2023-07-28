@@ -3,8 +3,16 @@
 {% block title %}Image List{% endblock %} 
 
 {% block content %} 
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <a class="btn btn-danger float-end" href="{% url 'imgcapture:del_all' %}">Delete All</a>
+            </div>
+        </div>
+    </div>
+    
 
-    <table style="width: 70%;" class="table">
+    <table style="width: 100%;" class="table">
         <tr>
             <th>Id</th>
             <th data-bs-toggle="tooltip" title="Camera that took pic">Camera</th>
