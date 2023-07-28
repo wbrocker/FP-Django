@@ -9,5 +9,6 @@ urlpatterns = [
     path('upload/', upload_image_view, name='upload_image'),        # Upload images
     path('delete/<int:pk>', views.delete_image, name='delete'),     # Delete Images
     path('analyze/<int:pk>', views.re_analyze, name='analyze'),     # Re-analyze images
+    path('dnd/<int:pk>/', views.dnd, name='dnd'),
     path('success', success, name='success'),                       # Success Endpoint
 ]

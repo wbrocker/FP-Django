@@ -31,11 +31,12 @@ def delete_image(request, pk):
     image_path = image.image.path
 
     # Delete the DB Object
-    image.delete()
+    if image.dnd == False:
+        image.delete()
 
-    # Remove the file from storage as well.
-    if os.path.exists(image_path):
-        os.remove(image_path)
+        # Remove the file from storage as well.
+        if os.path.exists(image_path):
+            os.remove(image_path)
 
     return redirect('dashboard:image-list')
 
@@ -83,5 +84,18 @@ def upload_image_view(request):
     print("Upload Done")
     return render(request, 'upload.html', {'form': form})
 
+
+def dnd(request, pk):
+    # Do not delete image toggle
+    image = get_object_or_404(ImageDetection, pk=pk)
+    if (image.dnd == False):
+        image.dnd = True
+    else:
+        image.dnd = False
+
+    image.save()
+    return redirect('dashboard:image-list')
+
 def success(request):
     return HttpResponse('Successfully uploaded!')
+

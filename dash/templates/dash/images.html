@@ -3,6 +3,7 @@
 {% block title %}Image List{% endblock %} 
 
 {% block content %} 
+
     <table style="width: 70%;" class="table">
         <tr>
             <th>Id</th>
@@ -11,6 +12,7 @@
             <th data-bs-toggle="tooltip" title="Image Creation date">Created</th>
             <th data-bs-toggle="tooltip" title="Image Analysis">Classified</th>
             <th data-bs-toggle="tooltip" title="What has been identified?">Identification</th>
+            <th data-bs-toggle="tooltip" title="Do not delete image">DND</th>
             <th>Delete</th>
         </tr>
     {% for image in images %} 
@@ -33,7 +35,16 @@
                     {% endfor %} 
                 {% endfor %}
             </td>
-            <td><a href="/api/delete/{{ image.id }}">Delete</a></td>
+            <td data-bs-toggle="tooltip" title="Del - Image will be deleted DND - Image will be kept">
+                {% if image.dnd %}
+                    <a class="btn btn-outline-success" href="{% url 'imgcapture:dnd' image.id %}">DND</a>
+                {% else %}
+                    <a class="btn btn-outline-warning" href="{% url 'imgcapture:dnd' image.id %}">Del</a>
+                {% endif %}
+            </td>
+            <td>
+                <a class="btn btn-danger" href="/api/delete/{{ image.id }}">Delete</a>
+            </td>
         </tr>
         
     {% endfor %} 
