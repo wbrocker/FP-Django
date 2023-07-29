@@ -18,7 +18,7 @@ def on_message(mqtt_client, userdata, msg):
 
     from devices.models import ActiveDevices
 
-    print(f'Received message on topic: {msg.topic} with payload: {msg.payload}')
+    # print(f'Received message on topic: {msg.topic} with payload: {msg.payload}')
 
     # Birth and Deatch Notificaitons
     prefix = 'esp/lwt/'
@@ -31,7 +31,7 @@ def on_message(mqtt_client, userdata, msg):
         deviceDb = ActiveDevices.objects.get(pk=deviceId)
         
         payload = msg.payload.decode('utf-8')
-        print(payload)
+        # print(payload)
         if payload == 'hello':
             deviceDb.status = ActiveDevices.Status.ACTIVE
             print("Set device to active")
