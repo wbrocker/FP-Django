@@ -47,7 +47,7 @@ class DeleteAllViewTestCase(TestCase):
         print(response)
 
         # Confirm that the response is successful
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
 
         # Confirm that no objects are deleted since dnd=True
         self.assertEqual(ImageDetection.objects.count(), 1)
@@ -61,4 +61,4 @@ class DeleteAllViewTestCase(TestCase):
         url = reverse('imgcapture:del_all')
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)

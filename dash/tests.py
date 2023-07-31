@@ -41,7 +41,7 @@ class DashboardViewTestCase(TestCase):
 
         # Confirm that the 'images' variable contains data
         images = response.context['images']
-        self.assertEqual(images.count(), 2)     # Assuming 2 images
+        self.assertEqual(len(images), 2)     # Assuming 2 images
         for image in images:
             self.assertIsInstance(image.detection_data, dict)
 

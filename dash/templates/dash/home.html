@@ -2,9 +2,61 @@
 
 {% block content %} 
 
-<h1>Main Dashboard</h1>
+<h1>Alarm Status</h1>
 
 <a href="{% url 'dashboard:image-list' %}">View Images</a>
 <a href="{% url 'devices:device-home' %}">Devices</a>
+<h1>Sensor Status</h1>
+<br/>
+
+<div class="container">
+    <div class="row">
+        {% for sensor in sensors %} 
+        <div class="col-md-4 mb-4">
+            <div class="card {% if sensor.status == 'ACT' %}bg-info{% else %}bg-warning{% endif %}" style="width:200px">
+                <div class="card-header"><h5>{{ sensor.location }}</h5></div>
+                <div class="card-body">
+                    <p>Name: {{ sensor.name }}</p>
+                    <p>Temperature: {{ sensor.data.temperature }}&deg;C</p>
+                    <p>Humidity: {{ sensor.data.humidity }}%</p>
+                    <br/>
+                    {% if sensor.status == 'INA' %}
+                        <p class="small-font bottom-right-italic">Inactive</p>
+                    {% else %}
+                        <p class="small-font bottom-right-italic">Active</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+    </div>
+</div>
+
+<h1>Camera Status</h1>
+<br />
+<div class="container">
+    <div class="row">
+        {% for camera in cameras %} 
+        <div class="col-md-4 mb-4">
+            <div class="card {% if camera.status == 'ACT' %}bg-info{% else %}bg-warning{% endif %}" style="width:200px">
+                <div class="card-header"><h5>{{ camera.location }}</h5></div>
+                <div class="card-body">
+                    <p>Name: {{ camera.name }}</p>
+                    <p>Status: {{camera.get_status_display }}</p>
+                    <p>Flash: {% if camera.data.flash %} On {% else %} Off {% endif %}</p>
+                    <br/>
+                    {% if camera.status == 'ACT' %}
+                        <p class="small-font bottom-right-italic">Available</p>
+                    {% else %}
+                        <p class="small-font bottom-right-italic">Unreachable</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+    </div>
+</div>
 
 {% endblock %} 

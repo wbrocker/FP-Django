@@ -4,12 +4,18 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
 
 from imgcapture.models import ImageDetection
+from devices.models import ActiveDevices
 
 
 def index(request):
-    # return HttpResponse("Main Dashboard")
+    # Get all Sensor devices
+    devices = ActiveDevices.objects.filter(type=ActiveDevices.Type.SENSOR)
+    cameras = ActiveDevices.objects.filter(type=ActiveDevices.Type.CAM)
 
-    return render(request, 'dash/home.html')
+
+    return render(request, 'dash/home.html',
+                  {"sensors": devices,
+                   "cameras": cameras})
 
 
 # Function to return all images captured.

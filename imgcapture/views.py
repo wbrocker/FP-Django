@@ -84,13 +84,13 @@ def upload_image_view(request):
             instance = form.save()                      # Save the form instance to get the DB Record
 
             # Debug
-            print("Detection Started!")
+            # print("Detection Started!")
 
             # Process the Detect function Asynchronously.
             detect(instance.id, './imgcapture/efficientdet_lite0.tflite')
 
             # Debug
-            print("Detection DONE!")
+            # print("Detection DONE!")
 
             # test = detect(image_file.name, 'efficientdet_lite0.tflite')
 
