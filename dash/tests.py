@@ -3,6 +3,7 @@ import json
 from django.urls import reverse
 
 from imgcapture.models import ImageDetection
+from alarm.models import AlarmConfig
 
 class DashboardViewTestCase(TestCase):
     def setUp(self):
@@ -15,6 +16,12 @@ class DashboardViewTestCase(TestCase):
             image='test1.jpg',
             detection_data='{"key2": "value2"}'
         )
+        AlarmConfig.objects.create(
+            status=AlarmConfig.ALARM_STATUS.ON,
+            type=AlarmConfig.ALARM_TYPES.VISUAL,
+            current_type=AlarmConfig.ALARM_TYPES.OFF
+        )
+
 
     def test_index_view(self):
         # test the 'index' view
