@@ -5,21 +5,25 @@ import json
 
 from imgcapture.models import ImageDetection
 from devices.models import ActiveDevices
+from alarm.models import AlarmConfig
 
 
 def index(request):
     # Get all Sensor devices
     devices = ActiveDevices.objects.filter(type=ActiveDevices.Type.SENSOR)
     cameras = ActiveDevices.objects.filter(type=ActiveDevices.Type.CAM)
+    alarm = AlarmConfig.objects.get(pk=1)
 
 
     return render(request, 'dash/home.html',
                   {"sensors": devices,
-                   "cameras": cameras})
+                   "cameras": cameras,
+                   "alarm": alarm})
 
 
 # Function to return all images captured.
 def imageList(request):
+    alarm = AlarmConfig.objects.get(pk=1)
     all_images = ImageDetection.objects.all().order_by('-created')
     paginator = Paginator(all_images, 10)                       # 10 Images per page
     page = request.GET.get('page')
@@ -46,16 +50,20 @@ def imageList(request):
 
     return render(request,
                   'dash/images.html',
-                  {'images': images})
+                  {'images': images,
+                   'alarm': alarm})
 
 
 # Function to return individual image.
 def individualImage(request, pk):
+    alarm = AlarmConfig.objects.get(pk=1)
+
     image = ImageDetection.objects.get(pk=pk)
     detection_data = json.loads(image.detection_data)
     image.detection_data = detection_data
 
     return render(request,
                   'dash/image.html',
-                  {'image': image})
+                  {'image': image,
+                   'alarm': alarm})
 

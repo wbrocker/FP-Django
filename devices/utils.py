@@ -5,6 +5,7 @@ import json
 
 from .models import ActiveDevices
 
+
 def getCameraSettings(id):
     """
     Call the API for the camera based on id.
@@ -86,3 +87,23 @@ def setDeviceSettings(id):
 
     if device.status == 'ACT':
         data_dict
+
+def ChangeCamStatus(status):
+    """
+    Change the Alarm.
+    Status = On/Off
+    Type = Audible, Visual or Both
+    """
+    devices = ActiveDevices.objects.filter(type=ActiveDevices.Type.CAM)
+
+    for dev in devices:
+        # Check if Camera
+        if dev == ActiveDevices.Type.CAM:
+            if status:
+                dev.status = ActiveDevices.Status.ACTIVE
+            else:
+                dev.status = ActiveDevices.Status.INACTIVE
+
+        dev.save()
+
+    return True

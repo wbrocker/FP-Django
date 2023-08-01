@@ -1,12 +1,6 @@
 from django import forms
 from .models import Locations, ActiveDevices
 
-# class ActiveCameraForm(forms.ModelForm):
-
-#     class Meta:
-#         model = ActiveCamera
-#         fields = "__all__"
-#         exclude = ["device_firmware"]
 
 class DeviceForm(forms.ModelForm):
 
@@ -14,6 +8,11 @@ class DeviceForm(forms.ModelForm):
         model = ActiveDevices
         fields = "__all__"
         exclude = ['type', 'firmware', 'status', 'data']
+
+    widgets = {
+        'name': forms.TextInput(attrs={'class': 'form-control'}),
+        'description': forms.TextInput(attrs={'class': 'form-control'}),
+    }
         # readonly_fields = ('type', 'ip',)
 
     # picInterval = forms.IntegerField(label='Picture Interval', required=True)

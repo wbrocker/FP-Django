@@ -54,23 +54,58 @@
     </head>
     <body>
 
-        <div class="container">
-            <ul class="nav bg-info">
-                <li class="nav-item">
-                    <a class="nav-link link-light" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link link-light" href="/images">Images</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Devices</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="/devices">List Devices</a></li>
-                        <li><a class="dropdown-item" href="/devices/locations/">List Locations</a></li>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg bg-info">
+            <div class="container-fluid">
+                <!-- Brand/logo -->
+                <a class="navbar-brand" href="/">RuralSec</a>
+        
+                <!-- Navigation links (buttons on the left) -->
+                <div class="navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link link-light" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link link-light" href="/images">Images</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle link-light" href="#" role="button" data-bs-toggle="dropdown">Devices</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/devices">List Devices</a></li>
+                                <li><a class="dropdown-item" href="/devices/locations/">List Locations</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle link-light" href="#" role="button" data-bs-toggle="dropdown">Alarms</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Alarm Config</a></li>
+                                <li><a class="dropdown-item" href="#">Audit Trails</a></li>
+                            </ul>
+                        </li>
                     </ul>
-                </li>
-            </ul>
-        </div>
+                </div>
+        
+                <!-- Additional buttons (buttons on the right) -->
+                <div>
+                    {% if alarm.get_status_display == 'On' %}
+                        <a class="btn btn-success" href="{% url 'alarm:alarm-status' %}">Alarm Armed</a>
+                    {% else %}
+                        <a class="btn btn-primary" href="{% url 'alarm:alarm-status' %}">Alarm Disarmed</a>
+                    {% endif %}
+<!-- 
+                    {% if alarm.get_type_display == 'Audible' %}
+                        <button type="button" class="btn btn-secondary">Audible</button>
+                    {% elif alarm.get_type_display == 'Visual' %}
+                        <button type="button" class="btn btn-secondary">Visual</button>
+                    {% elif alarm.get_type_display == 'Audible and Visual' %}
+                        <button type="button" class="btn btn-secondary">Both</button>
+                    {% endif %} -->
+                </div>
+            </div>
+        </nav>
+        
+    </div>
 
         <div class="container pt-3 container">
         {% block content %} {% endblock %}

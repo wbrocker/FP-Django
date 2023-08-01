@@ -5,6 +5,7 @@ import json, requests
 
 from . import views
 from .models import Locations, ActiveDevices
+from alarm.models import AlarmConfig
 
 from .forms import LocationForm, DeviceForm
 
@@ -242,6 +243,10 @@ def registerDevice(request):
                 device.data['cameraid'] = device.pk 
             elif device.type == 'SEN':
                 device.data['sensorid'] = device.pk
+                if AlarmConfig(pk=1) == AlarmConfig.ALARM_STATUS.OFF:
+                    device.data['alarm'] = 0
+                else:
+                    device.data['alarm'] = 1
             device.save()
         # If this exists, return the settings to the device.
         # return HttpResponse(json.dumps(device.data)) if device.data else None
