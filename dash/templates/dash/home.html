@@ -39,7 +39,7 @@
     <div class="row">
         {% for camera in cameras %} 
         <div class="col-md-4 mb-4">
-            <div class="card {% if camera.status == 'ACT' %}bg-info{% else %}bg-warning{% endif %}" style="width:200px">
+            <div class="card {% if camera.status == 'ACT' %}bg-info{% elif camera.status == 'INA' %}bg-warning{% else %}bg-danger{% endif %}" style="width:200px">
                 <div class="card-header"><h5>{{ camera.location }}</h5></div>
                 <div class="card-body">
                     <p>Name: {{ camera.name }}</p>
@@ -47,10 +47,20 @@
                     <p>Flash: {% if camera.data.flash %} On {% else %} Off {% endif %}</p>
                     <br/>
                     {% if camera.status == 'ACT' %}
-                        <p class="small-font bottom-right-italic">Available</p>
+                        <p class="small-font bottom-right-italic">Online</p>
+                    {% elif camera.status == 'INA' %}
+                        <p class="small-font bottom-right-italic">Online</p>
                     {% else %}
-                        <p class="small-font bottom-right-italic">Unreachable</p>
+                        <p class="small-font bottom-right-italic">Error</p>
                     {% endif %}
+                    <p>
+                        {% if camera.status != 'ERR' %}
+                            <a class="btn btn-success" href="{% url 'devices:capture' camera.id %}">Take Pic</a>
+                        {% else %}
+                            <button type="button" class="btn btn-light" disabled>Take Pic</button>
+
+                        {% endif %}
+                    </p>
                 </div>
             </div>
         </div>

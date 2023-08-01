@@ -8,6 +8,7 @@ urlpatterns = [
     path('', views.deviceList, name='device-home'),
     path('addcam/', views.addCamera, name='add-cam'),
     path('adddevice/', views.AddDevice, name='add-device'),
+    path('capture/<int:pk>/', views.CaptureImage, name='capture'),
     path('deldevice/<int:pk>/', views.DelDevice, name='del-device'),
     path('edit_cam/<int:pk>/', views.EditCam, name='edit-cam'),
     path('edit_device/<int:pk>/', views.EditDevice, name='edit-device'),

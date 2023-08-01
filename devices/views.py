@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-import json
+import json, requests
 
 from . import views
 from .models import Locations, ActiveDevices
@@ -280,6 +280,25 @@ def registerDevice(request):
     response['Content-Type'] = "application/json"
 
     return response 
+
+def CaptureImage(request, pk):
+    """
+    Capture an image
+    """
+    cam = ActiveDevices.objects.get(pk=pk)
+    ip_addr = cam.ip
+
+    try:
+        url = 'http://' + ip_addr + '/takepic'
+        print(url)
+        r = requests.get(url)
+        print(r.status_code)
+        if r.status_code == '200':
+            return redirect('dashboard:images')
+    except:
+        print("Error taking pic")
+
+    return redirect('dashboard:dash')
 
 
 def LocationList(request):

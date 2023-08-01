@@ -60,32 +60,39 @@
 
     <!-- Disply the pagination links -->
 
-    <ul class="pagination justify-content-center">
+
+      <ul class="pagination justify-content-center">
         {% if images.has_previous %}
-        <li class="page-item"><a class="page-link" href="?page={{ images.previous_page_number }}">{{ images.previous_page_number }}</a></li>
-        {% endif %} 
-        {% if images.has_next %}
-        <li class="page-item"><a class="page-link" href="?page={{ images.next_page_number }}">{{ images.next_page_number }}</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ images.previous_page_number }}">Previous</a></li>
         {% endif %}
-
-
-      </ul>
-
-    <div class="pagination">
-        <span class="step-links">
-            {% if images.has_previous %}
-                <a href="?page=1">&laquo; first</a>
-                <a href="?page={{ images.previous_page_number }}">previous</a>
+    
+        {% if images.number > 3 %}
+            <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+            {% if images.number > 4 %}
+                <li class="page-item disabled"><span class="page-link">...</span></li>
             {% endif %}
-
-            <span class="current">
-                Page {{ images.number }} of {{ images.paginator.num_pages }}.
-            </span>
-
-            {% if images.has_next %}
-                <a href="?page={{ images.next_page_number }}">next</a>
-                <a href="?page={{ images.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    
+        {% for num in images.paginator.page_range %}
+            {% if num == images.number %}
+                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% elif num > images.number|add:'-3' and num < images.number|add:'3' %}
+                <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
             {% endif %}
-        </span>
-    </div>
+        {% endfor %}
+    
+        {% if images.paginator.num_pages > images.number|add:'3' %}
+            {% if images.paginator.num_pages > images.number|add:'4' %}
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+            {% endif %}
+            <li class="page-item"><a class="page-link" href="?page={{ images.paginator.num_pages }}">{{ images.paginator.num_pages }}</a></li>
+        {% endif %}
+    
+        {% if images.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ images.next_page_number }}">Next</a></li>
+        {% endif %}
+    </ul>
+
+
+
 {% endblock %} 
