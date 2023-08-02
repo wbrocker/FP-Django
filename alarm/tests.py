@@ -1,6 +1,9 @@
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
+from django.urls import path
+from django.urls import reverse
 from django.core.exceptions import ValidationError
 from .models import AlarmConfig
+from .views import ChangeAlarmStatus
 
 
 class AlarmConfigModelTestCase(TestCase):
@@ -38,3 +41,32 @@ class AlarmConfigModelTestCase(TestCase):
         expected_string = f"Alarm: On Type: Audible and Visual"
         self.assertEqual(str(alarm_config), expected_string)
                                                   
+
+# class ChangeAlarmStatusViewTestCase(TestCase):
+
+#     def setUp(self):
+#         # Set up a factory to create requests
+#         self.factory = RequestFactory
+
+
+#     def test_change_alarm_status_on_to_off(self):
+#         # Test changing alarm status from ON to OFF
+#         alarm = AlarmConfig.objects.create(status=AlarmConfig.ALARM_STATUS.ON)
+#         url = reverse('alarm:alarm-status')
+#         request = self.factory.get(url)
+#         response = ChangeAlarmStatus(request)
+#         # Check if the alarm status is changed to OFF
+#         self.assertEqual(AlarmConfig.objects.get(pk=alarm.pk).status, AlarmConfig.ALARM_STATUS.OFF)
+#         # Check if the view redirects to the Dash page
+#         self.assertRedirects(response, reverse('dashboard:dash'))
+
+#     def test_change_alarm_status_off_to_on(self):
+#         # Test changing alarm status from OFF to ON
+#         alarm = AlarmConfig.objects.create(status=AlarmConfig.ALARM_STATUS.OFF)
+#         url = reverse('alarm:alarm-status')
+#         request = self.factory.get(url)
+#         response = ChangeAlarmStatus(request)
+#         # Check if the alarm status is changed to ON
+#         self.assertEqual(AlarmConfig.objects.get(pk=alarm.pk).status, AlarmConfig.ALARM_STATUS.ON)
+#         # Check if the view redirects to the dashboard page
+#         self.assertRedirects(response, reverse('dashboard:dash'))
