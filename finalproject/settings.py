@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'alarm',
     'crispy_forms',
     'crispy_bootstrap5',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [

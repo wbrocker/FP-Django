@@ -1,6 +1,7 @@
 from django.db import models
 from enum import Enum
 from django.utils.translation import gettext_lazy as _
+from django.db.models import Count
 
 # class ActiveCamera(models.Model):
 #     device_name = models.CharField(max_length=100, default='No Name')
@@ -21,6 +22,9 @@ class Locations(models.Model):
 
     def __str__(self):
         return self.name
+        # Count the devices per room.
+        # devices_count = self.devices.aggregate(total_devices=Count('id'))['total_devices']
+        # return str(devices_count)
 
 class ActiveDevices(models.Model):
     
@@ -53,6 +57,6 @@ class ActiveDevices(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.status
+        return self.name
 
 

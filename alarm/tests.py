@@ -55,7 +55,7 @@ class AlarmConfigModelTestCase(TestCase):
 #         url = reverse('alarm:alarm-status')
 #         request = self.factory.get(url)
 #         response = ChangeAlarmStatus(request)
-#         # Check if the alarm status is changed to OFF
+#         # Check if the alarm status is changed to OFF 
 #         self.assertEqual(AlarmConfig.objects.get(pk=alarm.pk).status, AlarmConfig.ALARM_STATUS.OFF)
 #         # Check if the view redirects to the Dash page
 #         self.assertRedirects(response, reverse('dashboard:dash'))

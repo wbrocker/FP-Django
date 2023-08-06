@@ -1,4 +1,5 @@
 {% extends "dash/base.html" %} 
+{% load humanize %}
 
 {% block title %}Image List{% endblock %} 
 
@@ -29,7 +30,7 @@
             <td>{{ image.cameraId }}</td>
             <td><a href="{% url 'dashboard:image' pk=image.id %}">
                 <img src="{{ image.image.url }}" class="img-thumbnail" height="200" width="200"></a></td>
-            <td>{{ image.created }}</td>
+            <td data-bo-toggle="tooltip" title="{{ image.created }}">{{ image.created|timesince }} ago</td>
             <td>{{ image.analyzed }}</td>
             <td>
                 <!-- {{ image.detection_data }} -->

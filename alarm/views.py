@@ -15,3 +15,4 @@ def ChangeAlarmStatus(request):
     alarm.save()
 
     return redirect('dashboard:dash')
+
