@@ -51,7 +51,7 @@ def setCameraSettings(id):
     Function to set the camera settings according
     to what was saved in the DB.
     """
-    # cam = ActiveCamera.objects.get(id=id)
+    print("Updating Camera!")
     cam = ActiveDevices.objects.get(id=id)
     # Read the JSON
     data_dict = cam.data
@@ -99,6 +99,27 @@ def ChangeCamStatus(status):
     for dev in devices:
         # Check if Camera
         if dev == ActiveDevices.Type.CAM:
+            if status:
+                dev.status = ActiveDevices.Status.ACTIVE
+            else:
+                dev.status = ActiveDevices.Status.INACTIVE
+
+        dev.save()
+        setCameraSettings(dev.id)
+
+    return True
+
+def ActivateOrDeactivateAlarm(status):
+    """
+    Activate or Deactivate All Alarms
+    """
+    print("In Activate/Deactivate")
+    devices = ActiveDevices.objects.all()
+
+    for dev in devices:
+        # Check if it's a camera
+        if dev.type == ActiveDevices.Type.CAM:
+            print("Changing Camera Status")
             if status:
                 dev.status = ActiveDevices.Status.ACTIVE
             else:

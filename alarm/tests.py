@@ -2,7 +2,7 @@ from django.test import TestCase, RequestFactory
 from django.urls import path
 from django.urls import reverse
 from django.core.exceptions import ValidationError
-from .models import AlarmConfig
+from .models import AlarmConfig, DetectionObjects
 from .views import ChangeAlarmStatus
 
 
@@ -40,7 +40,38 @@ class AlarmConfigModelTestCase(TestCase):
                                                   type=AlarmConfig.ALARM_TYPES.BOTH)
         expected_string = f"Alarm: On Type: Audible and Visual"
         self.assertEqual(str(alarm_config), expected_string)
-                                                  
+
+
+class DetectionObjectsTestCase(TestCase):
+    def setUp(self):
+        # Create sample detection objects for testing
+        DetectionObjects.objects.create(name='Object1', name_cleaned='ObjectCleaned', alarm_on_object=True)
+        DetectionObjects.objects.create(name='Object2', alarm_on_object=False)
+        DetectionObjects.objects.create(name='Object3', name_cleaned='', alarm_on_object=True)
+
+    def test_str_method(self):
+        # Test the __str__ method.
+        obj1 = DetectionObjects.objects.get(name='Object1')
+        obj2 = DetectionObjects.objects.get(name='Object2')
+        obj3 = DetectionObjects.objects.get(name='Object3')
+        self.assertEqual(str(obj1), 'Object1')
+        self.assertEqual(str(obj2), 'Object2')
+        self.assertEqual(str(obj3), 'Object3')
+
+    def test_default_name_cleaned(self):
+        # Test that the name_cleaned field is set to the name by default
+        obj1 = DetectionObjects.objects.get(name='Object1')
+        obj2 = DetectionObjects.objects.get(name='Object2')
+        self.assertEqual(obj1.name_cleaned, 'ObjectCleaned')
+        self.assertEqual(obj2.name, 'Object2')           
+
+    def test_alarm_on_object_default(self):
+        # Test the default value for alarm_on
+        obj1 = DetectionObjects.objects.get(name='Object1')
+        obj2 = DetectionObjects.objects.get(name='Object2')
+        self.assertTrue(obj1.alarm_on_object)
+        self.assertFalse(obj2.alarm_on_object)
+
 
 # class ChangeAlarmStatusViewTestCase(TestCase):
 

@@ -1,0 +1,22 @@
+{% extends "dash/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Edit Alarm{% endblock %} 
+
+{% block content %} 
+
+    <div class="container">
+        <div class="form-group row my-5">
+            <form method="POST" class="form">
+                {% csrf_token %} 
+                <div class="form-group">
+                    {{ form|crispy }}
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+        
+    
+
+{% endblock %} 
