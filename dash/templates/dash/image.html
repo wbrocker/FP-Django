@@ -26,8 +26,10 @@
         </tr>
     </table>
     <div class="image-container">
-        <img src="{{ image.image.url }}" alt="Image" class="img-fluid">
+        <img src="{{ image.image.url }}" alt="Image">
         {% for detect in image.detection_data.detections %} 
+            <!-- Only draw boundinx box if score > 0.5 -->
+            {% for detect in image.detection_data.detections %} 
             <!-- Only draw boundinx box if score > 0.5 -->
             {% for category in detect.categories %}
                 {% if category.score >= 0.3 %}
@@ -37,6 +39,7 @@
                                                     height: {{ detect.bounding_box.height }}px;"></div>
                 {% endif %}
             {% endfor %}
+        {% endfor %}
         {% endfor %}
         
     </div>
