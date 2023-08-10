@@ -89,19 +89,17 @@
         
                 <!-- Additional buttons (buttons on the right) -->
                 <div>
+                    {% if alarm.status == 'ON' %}
+                        {% if alarm.current_type != 'OFF' %}
+                            <a class="btn btn-danger" href="#">ALARM!</button>
+                        {% endif %}
+                    {% endif %}
                     {% if alarm.get_status_display == 'On' %}
                         <a class="btn btn-success" href="{% url 'alarm:alarm-status' %}">Alarm Armed</a>
                     {% else %}
                         <a class="btn btn-primary" href="{% url 'alarm:alarm-status' %}">Alarm Disarmed</a>
                     {% endif %}
-<!-- 
-                    {% if alarm.get_type_display == 'Audible' %}
-                        <button type="button" class="btn btn-secondary">Audible</button>
-                    {% elif alarm.get_type_display == 'Visual' %}
-                        <button type="button" class="btn btn-secondary">Visual</button>
-                    {% elif alarm.get_type_display == 'Audible and Visual' %}
-                        <button type="button" class="btn btn-secondary">Both</button>
-                    {% endif %} -->
+
                 </div>
             </div>
         </nav>

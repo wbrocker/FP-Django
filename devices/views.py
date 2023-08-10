@@ -24,11 +24,13 @@ def deviceList(request):
 
     # camera_devices = ActiveCamera.objects.all().order_by('id')
     all_devices = ActiveDevices.objects.all().order_by('type')
+    alarm = AlarmConfig.objects.get(pk=1)
 
     return render(request,
                   'devices/devices.html',
                   {
-                   'devices': all_devices
+                   "devices": all_devices,
+                   "alarm": alarm
                    })
 
 def DelDevice(request, pk):
@@ -243,10 +245,27 @@ def registerDevice(request):
                 device.data['cameraid'] = device.pk 
             elif device.type == 'SEN':
                 device.data['sensorid'] = device.pk
-                if AlarmConfig(pk=1) == AlarmConfig.ALARM_STATUS.OFF:
+                alarm = AlarmConfig.objects.first()
+                if alarm.status == AlarmConfig.ALARM_STATUS.OFF:
+                    print("Alarm is off")
+                    print(AlarmConfig(pk=1).status)
                     device.data['alarm'] = 0
+                    device.data['alarmtrigger'] = 0
                 else:
                     device.data['alarm'] = 1
+                    current = AlarmConfig(pk=1).current_type
+                    print("Current: ")
+                    print(current)
+                    if current == AlarmConfig.ALARM_TYPES.OFF:
+                        device.data['alarmtrigger'] = 0
+                    elif current == AlarmConfig.ALARM_TYPES.AUDIBLE:
+                        device.data['alarmtrigger'] = 1
+                    elif current == AlarmConfig.ALARM_TYPES.VISUAL:
+                        device.data['alarmtrigger'] = 2
+                    elif current == AlarmConfig.ALARM_TYPES.BOTH:
+                        device.data['alarmtrigger'] = 3
+
+            print(device.data)
             device.save()
         # If this exists, return the settings to the device.
         # return HttpResponse(json.dumps(device.data)) if device.data else None

@@ -126,5 +126,6 @@ def ActivateOrDeactivateAlarm(status):
                 dev.status = ActiveDevices.Status.INACTIVE
 
         dev.save()
+        getCameraSettings(dev.id)
 
     return True

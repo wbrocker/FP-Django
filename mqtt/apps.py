@@ -7,3 +7,4 @@ class MqttConfig(AppConfig):
 
     def ready(self):
         from . import mqtt
+        # from alarm.utils import handleButton

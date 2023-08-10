@@ -40,4 +40,7 @@ def AlarmConfigView(request):
         form = AlarmForm(instance=alarm_config)
 
     return render(request, 'alarm/alarmconfig.html', 
-                  {'form': form})
+                  {
+                    "form": form,
+                   "alarm": alarm_config
+                   })

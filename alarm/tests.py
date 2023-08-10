@@ -1,9 +1,13 @@
 from django.test import TestCase, RequestFactory
+from django.shortcuts import get_object_or_404
+from unittest.mock import patch
 from django.urls import path
 from django.urls import reverse
 from django.core.exceptions import ValidationError
 from .models import AlarmConfig, DetectionObjects
+from imgcapture.models import ImageDetection
 from .views import ChangeAlarmStatus
+from alarm.utils import checkAlarm
 
 
 class AlarmConfigModelTestCase(TestCase):
@@ -71,6 +75,36 @@ class DetectionObjectsTestCase(TestCase):
         obj2 = DetectionObjects.objects.get(name='Object2')
         self.assertTrue(obj1.alarm_on_object)
         self.assertFalse(obj2.alarm_on_object)
+
+
+class CheckAlarmTestCase(TestCase):
+    def setUp(self):
+        self.alarm = AlarmConfig.objects.create(status='ON', score=0.5)
+        self.detect_object1 = DetectionObjects.objects.create(name='Person', alarm_on_object=True)
+        self.detect_object2 = DetectionObjects.objects.create(name='Car', alarm_on_object=True)
+        self.detect_object3 = DetectionObjects.objects.create(name='Animal', alarm_on_object=False)
+
+    def test_raise_alarm_all_condition_met(self):
+        image = ImageDetection.objects.create(detection_data='{"detections": [{"category_name": "Person", "score": 0.6}]}')
+        with patch('alarm.utils.json.loads', return_value={'detections': [{'categories': [{'category_name': 'Person', 'score': 0.6}]}]}):
+            with patch('builtins.print') as mock_print:
+                checkAlarm(image.id)
+                mock_print.assert_called_with('Raising the Alarm!')
+                
+    def test_raise_alarm_specific_object_detected(self):
+        image = ImageDetection.objects.create(detection_data='{"detections": [{"categories": [{"category_name": "Car", "score": 0.7}]}]}')
+        with patch('alarm.utils.json.loads', return_value={'detections': [{'categories': [{'category_name': 'Car', 'score': 0.7}]}]}):
+            with patch('builtins.print') as mock_print:
+                checkAlarm(image.id)
+                mock_print.assert_called_with('Raising the Alarm!')
+        
+
+    def test_no_alarm_raised(self):
+        image = ImageDetection.objects.create(detection_data='{"detections": [{"categories": [{"category_name": "Animal", "score": 0.4}]}]}')
+        with patch('alarm.utils.json.loads', return_value={'detections': [{'categories': [{'category_name': 'Animal', 'score': 0.4}]}]} ):
+            with patch('builtins.print') as mock_print:
+                checkAlarm(image.id)
+                mock_print.assert_not_called()
 
 
 # class ChangeAlarmStatusViewTestCase(TestCase):

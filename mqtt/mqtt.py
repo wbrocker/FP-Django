@@ -1,3 +1,5 @@
+# from django.utils.module_loading import lazy_import
+
 import paho.mqtt.client as mqtt
 from django.conf import settings
 
@@ -9,6 +11,7 @@ def on_connect(mqtt_client, userdata, flags, rc):
         mqtt_client.subscribe('#')
         mqtt_client.subscribe('alarms')             # Alarm Topic
         mqtt_client.subscribe('esp/#')              # All ESP's
+
     else:
         print('Bad connection. Code: ', rc)
 
@@ -18,12 +21,11 @@ def on_message(mqtt_client, userdata, msg):
 
     from devices.models import ActiveDevices
 
-    # print(f'Received message on topic: {msg.topic} with payload: {msg.payload}')
-
     # Birth and Deatch Notificaitons
     prefix = 'esp/lwt/'
     prefixTemp = 'esp/temp/'
     prefixHum = 'esp/hum/'
+    prefixButton = 'esp/button/'
 
     if (msg.topic.startswith(prefix)):
         deviceId = msg.topic[len(prefix):]
@@ -61,6 +63,20 @@ def on_message(mqtt_client, userdata, msg):
         deviceDb.data['humidity'] = payload
 
         deviceDb.save()
+
+    # Button Clicks
+    elif (msg.topic.startswith(prefixButton)):
+        from alarm.utils import handleButton
+        print("MQTT Button Clicked")
+
+        deviceId = msg.topic[len(prefixButton):]
+        # deviceDb = ActiveDevices.objects.get(pk=deviceId)
+        payload = msg.payload.decode('utf-8')
+        print("Payload: " + payload)
+
+        handleButton(payload, deviceId)
+        # handleButton_lazy()(payload, deviceId)
+        
 
 client = mqtt.Client()
 client.on_connect = on_connect

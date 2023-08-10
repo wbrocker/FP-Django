@@ -7,7 +7,8 @@ from imgcapture.models import ImageDetection
 def checkAlarm(imageId):
     """
     Function to check conditions and 
-    raise alarm if they are met
+    raise alarm if they are met using the 
+    picture id passed.
     """
     raiseAlarm = False 
 
@@ -15,8 +16,6 @@ def checkAlarm(imageId):
     detectObjects = DetectionObjects.objects.all()
 
     detlist = []        ## List that contains detectable objects.
-
-    
 
 
     # Check if the alarm is set to On...
@@ -51,6 +50,35 @@ def checkAlarm(imageId):
                     print("Item Detected! Alarm to be raised!")
                     raiseAlarm = True
 
-    if raiseAlarm:
-        print("Raising the Alarm!")
-        
+        if raiseAlarm:
+            print("Raising the Alarm!")
+            # Write audit log
+            alarm.current_type = alarm.type
+            alarm.save()
+
+def handleButton(clicks, sensor):
+    """
+    Function to handle the button clicks.
+    """
+    print("Click received from: " + sensor)
+    alarm = AlarmConfig.objects.first()
+    alarm_status = alarm.current_type
+
+    if clicks == '1':
+        if alarm_status == AlarmConfig.ALARM_TYPES.OFF:     # Alarm is off. Just log
+            print("Single Click while alarm is Off")
+        else:
+            # Acknowledge alarm.
+            # Turn it off and write to Audit DB
+            print("Turning Alarm off by Button Ack")
+            alarm.current_type = AlarmConfig.ALARM_TYPES.OFF
+
+
+    elif clicks == '2':
+        # Double Click --> Raise Panic Alarm
+        alarm.current_type = AlarmConfig.type               # Raise the alarm
+
+    # Save the new alarm state
+    alarm.save()
+
+    return True
