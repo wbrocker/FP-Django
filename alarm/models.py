@@ -13,7 +13,7 @@ class DetectionObjects(models.Model):
     def __str__(self):
         return self.name
     
-    # Create the name_cleaned with a default value
+   # Create the name_cleaned with a default value
     def save(self, *args, **kwargs):
         if not self.name_cleaned:
             self.name_cleaned = self.name
@@ -49,7 +49,6 @@ class AlarmConfig(models.Model):
                                     default=ALARM_TYPES.OFF)
     
     # Objects that should be alarmed on
-    # alarm_objects = models.ManyToManyField(DetectionObjects, default='all')
     alarm_objects = models.BooleanField('Alarm on Object Recognition', default=False)      # Alarm on Objects
 
     # Score for items to alert on

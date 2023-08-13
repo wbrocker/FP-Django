@@ -111,7 +111,10 @@ def ChangeCamStatus(status):
 
 def ActivateOrDeactivateAlarm(status):
     """
-    Activate or Deactivate All Alarms
+    Activate or Deactivate All Alarms.
+    This is called when the Activation was done via MQTT. Only
+    the DB need to be updated to reflect the same and allow for
+    any camera that restarts to get the correct value.
     """
     print("In Activate/Deactivate")
     devices = ActiveDevices.objects.all()
@@ -119,13 +122,18 @@ def ActivateOrDeactivateAlarm(status):
     for dev in devices:
         # Check if it's a camera
         if dev.type == ActiveDevices.Type.CAM:
+            # get the JSON Config for the camera
+            data_dict = dev.data
             print("Changing Camera Status")
             if status:
+                # print("Making Camera Active")
                 dev.status = ActiveDevices.Status.ACTIVE
+                data_dict["camStatus"] = True
             else:
+                # print("Making Camera Inactive!")
                 dev.status = ActiveDevices.Status.INACTIVE
+                data_dict["camStatus"] = False
 
         dev.save()
-        getCameraSettings(dev.id)
 
     return True

@@ -1,0 +1,42 @@
+{% extends "dash/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Edit Alarm Objects{% endblock %} 
+
+{% block content %} 
+
+    <div class="container">
+        <table style="width: 80%;" class="table">
+            <tr>
+                <th>Object</th>
+                <th>Detect on Object</th>
+            </tr>
+
+            {% for obj in detection %}
+            <tr>
+                <td>{{ obj.name }}</td>
+                <td>
+                    <a href="{% url 'alarm:alarm-obj-toggle' %}?obj={{ obj.id }}">
+                        <button type="button" class="btn 
+                        {% if obj.alarm_on_object %}
+                            btn-danger
+                        {% else %}
+                            btn-warning
+                        {% endif %}
+                        btn-outline-primary">
+                            {% if obj.alarm_on_object %}
+                                Active
+                            {% else %}
+                                Inactive
+                            {% endif %}
+                            </button>
+                    </a>
+                    </td>
+            </tr> 
+            {% endfor %}
+        </table>
+    </div>
+        
+    
+
+{% endblock %} 

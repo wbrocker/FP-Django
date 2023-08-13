@@ -5,6 +5,7 @@ from django.utils import timezone
 import json
 
 from .models import Locations, ActiveDevices
+from alarm.models import AlarmConfig
 
 from .forms import DeviceForm, LocationForm
 
@@ -80,6 +81,12 @@ class DevicesListViewsTests(TestCase):
     def setUp(self):
         # Setup Location
         self.location = Locations.objects.create(name='Location1')
+        
+        # Test creating an AlarmConfig instance
+        alarm_config = AlarmConfig.objects.create()
+        self.assertEqual(alarm_config.status, AlarmConfig.ALARM_STATUS.OFF)
+        self.assertEqual(alarm_config.type, AlarmConfig.ALARM_TYPES.AUDIBLE)
+        self.assertEqual(alarm_config.current_type, AlarmConfig.ALARM_TYPES.OFF)
 
 
         # Create instances of ActiveDevices

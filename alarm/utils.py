@@ -47,7 +47,7 @@ def checkAlarm(imageId):
             for item in json_data['detections']:
                 print(item)
                 if detlist.count(item['categories'][0]['category_name']) and item['categories'][0]['score'] >= alarm.score:
-                    print("Item Detected! Alarm to be raised!")
+                    print("Object Detected and Score is high! Alarm to be raised!")
                     raiseAlarm = True
 
         if raiseAlarm:

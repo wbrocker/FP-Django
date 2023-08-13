@@ -34,8 +34,12 @@ def serialize_detection(detection):
 def detect(pk, model: str):
     """
     Detect the objects in the image and return results.
-
-    Example used from TFLite:
+    
+    Note:
+    Example code used from TFLite Object Recognition examples.
+    The model that is used here is also the default model for 
+    object detection in TensorFlow Lite. This was to reduce the 
+    time to train a new model.
 
     Arguments
         model: The name of the TFLite object detection model used.
@@ -45,7 +49,6 @@ def detect(pk, model: str):
 
     image_detection = ImageDetection.objects.get(pk=pk)
 
-    #filename = ImageDetection.objects.get(pk=pk).image.url
     filename = image_detection.image.url 
     type(filename)
     filename = "." + filename
@@ -89,5 +92,9 @@ def detect(pk, model: str):
     image_detection.analyzed = True
     image_detection.detection_data = serialized_data
     image_detection.save()
+
+    # Call the Alarm function to determine if alarm must be raised
+    from alarm.utils import checkAlarm
+    checkAlarm(image_detection.id)
     
     return detection_result
