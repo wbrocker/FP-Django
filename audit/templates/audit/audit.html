@@ -1,0 +1,65 @@
+{% extends "dash/base.html" %} 
+
+{% block title %}Audit Log{% endblock %} 
+
+{% block content %}
+
+    <div class="container">
+        <table style="width: 100%;" class="table">
+            <tr>
+                <th>Id</th>
+                <th>Created</th>
+                <th>Type</th>
+                <th>Source</th>
+                <th>Description</th>
+            </tr>
+
+            {% for audit in auditlog %}
+                <tr>
+                    <td>{{ audit.id }}</td>
+                    <td>{{ audit.created }}</td>
+                    <td>{{ audit.type }}</td>
+                    <td>{{ audit.source }}</td>
+                    <td>{{ audit.description }}</td>
+                </tr>
+
+            {% endfor %}
+        </table> 
+
+        <!-- Disply the pagination links -->
+
+
+      <ul class="pagination justify-content-center">
+        {% if auditlog.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ auditlog.previous_page_number }}">Previous</a></li>
+        {% endif %}
+    
+        {% if auditlog.number > 3 %}
+            <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+            {% if auditlog.number > 4 %}
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+            {% endif %}
+        {% endif %}
+    
+        {% for num in auditlog.paginator.page_range %}
+            {% if num == images.number %}
+                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% elif num > auditlog.number|add:'-3' and num < auditlog.number|add:'3' %}
+                <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+        {% endfor %}
+    
+        {% if auditlog.paginator.num_pages > auditlog.number|add:'3' %}
+            {% if auditlog.paginator.num_pages > auditlog.number|add:'4' %}
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+            {% endif %}
+            <li class="page-item"><a class="page-link" href="?page={{ auditlog.paginator.num_pages }}">{{ auditlog.paginator.num_pages }}</a></li>
+        {% endif %}
+    
+        {% if images.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ images.next_page_number }}">Next</a></li>
+        {% endif %}
+        </ul>
+    </div>
+
+{% endblock %}

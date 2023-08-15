@@ -21,6 +21,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('imgcapture.urls')),       # API Component
+    path('audit/', include('audit.urls')),          # Audit Logs
     path('devices/', include('devices.urls')),      # Devices Page
     path('', include('dash.urls')),                 # Component responsible for Dashboard
     path('mqtt/', include('mqtt.urls')),            # MQTT

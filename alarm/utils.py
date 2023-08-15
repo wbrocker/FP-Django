@@ -3,6 +3,7 @@ import json
 
 from .models import AlarmConfig, DetectionObjects
 from imgcapture.models import ImageDetection
+from audit.utils import Audit
 
 def checkAlarm(imageId):
     """
@@ -38,6 +39,7 @@ def checkAlarm(imageId):
         if detlist.count('all') == 1:
             print("ALL Condition met for Alarm!")
             raiseAlarm = True
+            Audit("ALA", "Alarm raised for movement", "Alarm")
         
         # Else go through the list to see if object is detected
         elif len(image.detection_data) > 10:
@@ -49,6 +51,8 @@ def checkAlarm(imageId):
                 if detlist.count(item['categories'][0]['category_name']) and item['categories'][0]['score'] >= alarm.score:
                     print("Object Detected and Score is high! Alarm to be raised!")
                     raiseAlarm = True
+                    desc = "Alarm for " + item['categories'][0]['category_name'] + " Score: " + item['categories'][0]['score']
+                    Audit("ALA", desc, "Alarm")
 
         if raiseAlarm:
             print("Raising the Alarm!")
@@ -67,16 +71,19 @@ def handleButton(clicks, sensor):
     if clicks == '1':
         if alarm_status == AlarmConfig.ALARM_TYPES.OFF:     # Alarm is off. Just log
             print("Single Click while alarm is Off")
+            Audit("ALA", "Button Clicked", "MQTT")
         else:
             # Acknowledge alarm.
             # Turn it off and write to Audit DB
             print("Turning Alarm off by Button Ack")
             alarm.current_type = AlarmConfig.ALARM_TYPES.OFF
+            Audit("ALA", "Alarm disabled by button click!", "MQTT")
 
 
     elif clicks == '2':
         # Double Click --> Raise Panic Alarm
         alarm.current_type = AlarmConfig.type               # Raise the alarm
+        Audit("ALA", "Panic Button Pressed!", "MQTT")
 
     # Save the new alarm state
     alarm.save()
