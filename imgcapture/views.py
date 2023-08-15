@@ -6,6 +6,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from .utils import detect
+from audit.utils import Audit
 
 import logging
 
@@ -15,6 +16,7 @@ from .models import ImageDetection
 # Function to re-analyze picture
 def re_analyze(request, pk):
     # Retrieve the DB Object
+    Audit("TEN", "Re-analyze image " + str(pk), "IMGCapture")
     image = get_object_or_404(ImageDetection, pk=pk)
 
     detect(image.id, './imgcapture/efficientdet_lite0.tflite')
@@ -24,6 +26,8 @@ def re_analyze(request, pk):
 
 # Function to delete specific images
 def delete_image(request, pk):
+
+    Audit("IMA", "Deleting image: " + str(pk), "IMGCapture")
     # Retrieve the database object
     image = get_object_or_404(ImageDetection, pk=pk)
 
@@ -45,6 +49,7 @@ def delete_all(request):
     Delete all images apart from 
     the pictures marked as DND
     """
+    Audit("IMA", "Deleting ALL images from Database", "IMGCapture")
     images_to_delete = ImageDetection.objects.filter(dnd=False)
 
     if request.method == 'POST':

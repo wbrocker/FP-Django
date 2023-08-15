@@ -5,6 +5,8 @@ class AuditLog(models.Model):
     class EVENT_TYPE(models.TextChoices):
         ALARM = 'ALA', 'Alarm'
         CONFIG = 'CFG', 'Configuration'
+        IMAGE = 'IMA', 'Image'
+        TENSOR = 'TEN', 'TensorFlow'
         OTHER = 'OTH', 'Other'
 
     type = models.CharField('Event Type',
