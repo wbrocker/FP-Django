@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 import json
 
 from .models import AlarmConfig, DetectionObjects
@@ -51,7 +50,7 @@ def checkAlarm(imageId):
                 if detlist.count(item['categories'][0]['category_name']) and item['categories'][0]['score'] >= alarm.score:
                     print("Object Detected and Score is high! Alarm to be raised!")
                     raiseAlarm = True
-                    desc = "Alarm for " + item['categories'][0]['category_name'] + " Score: " + item['categories'][0]['score']
+                    desc = "Alarm for " + item['categories'][0]['category_name'] + " Score: " + str(item['categories'][0]['score'])
                     Audit("ALA", desc, "Alarm")
 
         if raiseAlarm:

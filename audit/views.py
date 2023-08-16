@@ -12,7 +12,7 @@ def ViewAuditLog(request):
     alarm = AlarmConfig.objects.first()
 
     auditLog = AuditLog.objects.all().order_by('-created')
-    paginator = Paginator(auditLog, 10)                     # 20 Items per page
+    paginator = Paginator(auditLog, 20)                     # 20 Items per page
     page = request.GET.get('page')
 
     try:

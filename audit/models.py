@@ -5,6 +5,7 @@ class AuditLog(models.Model):
     class EVENT_TYPE(models.TextChoices):
         ALARM = 'ALA', 'Alarm'
         CONFIG = 'CFG', 'Configuration'
+        CAMERA = 'CAM', 'Camera'
         IMAGE = 'IMA', 'Image'
         TENSOR = 'TEN', 'TensorFlow'
         OTHER = 'OTH', 'Other'

@@ -6,6 +6,7 @@ import json, requests
 from . import views
 from .models import Locations, ActiveDevices
 from alarm.models import AlarmConfig
+from audit.utils import Audit
 
 from .forms import LocationForm, DeviceForm
 
@@ -40,6 +41,8 @@ def DelDevice(request, pk):
     device = ActiveDevices.objects.get(id=pk)
 
     device.delete()
+
+    Audit("CFG", "Device Deleted", "Devices")
 
     return redirect('devices:device-home')
 
@@ -128,6 +131,7 @@ def EditDevice(request, pk):
 
             if device.type == 'CAM':
                 setCameraSettings(pk)
+                Audit("CFG", "Device Edited", Device)
                 return redirect('devices:device-home')
             
         else:
@@ -159,6 +163,7 @@ def setCamStatus(request):
             else:
                 print("Cam is still inactive")
                 # Cam NOT active, no need to update
+                Audit("CAM", "Camera Id: " + cam.id + "Inactive!", "Camera")
                 update = False
 
         cam.save()
@@ -318,8 +323,10 @@ def CaptureImage(request, pk):
         r = requests.get(url)
         print(r.status_code)
         if r.status_code == '200':
+            Audit("CAM", "Capture Picture on " + str(cam.id), "Camera")
             return redirect('dashboard:images')
     except:
+        Audit("CAM", "Unable to capture picture on " + str(cam.id), "Camera")
         print("Error taking pic")
 
     return redirect('dashboard:dash')
@@ -345,9 +352,11 @@ def AddLocation(request):
     
         if form.is_valid():
             instance = form.save()
+            Audit("CFG", "Added Location - " + instance.name, "Locations")
             return redirect('devices:locations')
         
         else:
+            Audit("CFG", "Failed to add location", "Locations")
             print(form.errors)
 
     else:
@@ -368,6 +377,7 @@ def EditLocation(request, pk):
         
         if loc_form.is_valid():
             loc_form.save()
+            Audit("CFG", "Edit Location - " + location.name, "Locations")
             return redirect('devices:locations')
     else:
         loc_form = LocationForm(instance=location)
@@ -385,6 +395,7 @@ def DeleteLocation(request, pk):
 
     if request.method == 'POST':
         location.delete()
+        Audit("CFG", "Deleting Location - " + location.name, "Locations")
         return redirect('devices:locations')
     
     return render(request, 'devices/del_loc.html', {'location': location})
