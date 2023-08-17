@@ -137,3 +137,12 @@ def ActivateOrDeactivateAlarm(status):
         dev.save()
 
     return True
+
+def GetSensorLocation(id):
+    """
+    Function to retrieve the location 
+    of the sensor from the specified id
+    """
+    device = ActiveDevices.objects.get(id=id)
+
+    return device.location.name

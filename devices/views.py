@@ -9,6 +9,7 @@ from alarm.models import AlarmConfig
 from audit.utils import Audit
 
 from .forms import LocationForm, DeviceForm
+from mqtt.mqtt import client as mqtt_client
 
 from .utils import getCameraSettings, setCameraSettings
 
@@ -317,17 +318,21 @@ def CaptureImage(request, pk):
     cam = ActiveDevices.objects.get(pk=pk)
     ip_addr = cam.ip
 
-    try:
-        url = 'http://' + ip_addr + '/takepic'
-        print(url)
-        r = requests.get(url)
-        print(r.status_code)
-        if r.status_code == '200':
-            Audit("CAM", "Capture Picture on " + str(cam.id), "Camera")
-            return redirect('dashboard:images')
-    except:
-        Audit("CAM", "Unable to capture picture on " + str(cam.id), "Camera")
-        print("Error taking pic")
+    mqtt_client.publish('takepic', pk)
+    
+    # This section was replaced with the MQTT Functionality
+    # to take the picures.
+    # try:
+    #     url = 'http://' + ip_addr + '/takepic'
+    #     print(url)
+    #     r = requests.get(url)
+    #     print(r.status_code)
+    #     if r.status_code == '200':
+    #         Audit("CAM", "Capture Picture on " + str(cam.id), "Camera")
+    #         return redirect('dashboard:images')
+    # except:
+    #     Audit("CAM", "Unable to capture picture on " + str(cam.id), "Camera")
+    #     print("Error taking pic")
 
     return redirect('dashboard:dash')
 

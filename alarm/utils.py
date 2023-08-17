@@ -2,7 +2,9 @@ import json
 
 from .models import AlarmConfig, DetectionObjects
 from imgcapture.models import ImageDetection
+from devices.utils import GetSensorLocation
 from audit.utils import Audit
+from mqtt.mqtt import client as mqtt_client
 
 def checkAlarm(imageId):
     """
@@ -50,7 +52,7 @@ def checkAlarm(imageId):
                 if detlist.count(item['categories'][0]['category_name']) and item['categories'][0]['score'] >= alarm.score:
                     print("Object Detected and Score is high! Alarm to be raised!")
                     raiseAlarm = True
-                    desc = "Alarm for " + item['categories'][0]['category_name'] + " Score: " + str(item['categories'][0]['score'])
+                    desc = "Alarm for " + item['categories'][0]['category_name'] + " Score: " + str(item['categories'][0]['score']) + " > " + str(alarm.score)
                     Audit("ALA", desc, "Alarm")
 
         if raiseAlarm:
@@ -63,26 +65,33 @@ def handleButton(clicks, sensor):
     """
     Function to handle the button clicks.
     """
-    print("Click received from: " + sensor)
+
+    # Get sensor location
+    location = GetSensorLocation(sensor)
     alarm = AlarmConfig.objects.first()
     alarm_status = alarm.current_type
 
     if clicks == '1':
         if alarm_status == AlarmConfig.ALARM_TYPES.OFF:     # Alarm is off. Just log
-            print("Single Click while alarm is Off")
-            Audit("ALA", "Button Clicked", "MQTT")
+            print("Single Click while alarm is Off - " + location)
+            Audit("ALA", "Button Clicked in " + location, "MQTT")
         else:
             # Acknowledge alarm.
             # Turn it off and write to Audit DB
-            print("Turning Alarm off by Button Ack")
+            print("Turning Alarm off by Button Ack in " + location)
             alarm.current_type = AlarmConfig.ALARM_TYPES.OFF
-            Audit("ALA", "Alarm disabled by button click!", "MQTT")
+            Audit("ALA", "Alarm disabled by button click from " + location, "MQTT")
 
 
     elif clicks == '2':
         # Double Click --> Raise Panic Alarm
         alarm.current_type = AlarmConfig.type               # Raise the alarm
-        Audit("ALA", "Panic Button Pressed!", "MQTT")
+        Audit("ALA", "Panic Button Pressed! - " + location, "MQTT")
+        # All cameras to take a picture
+        Audit("ALA", "Panic Button initiated picture on all Cameras!", "MQTT")
+        # print("Taking picture on all cameras:");
+        rc, mid = mqtt_client.publish('takepic', 0)
+
 
     # Save the new alarm state
     alarm.save()

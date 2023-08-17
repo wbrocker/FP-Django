@@ -11,8 +11,10 @@ def ChangeAlarmStatus(request):
 
     if alarm.status == AlarmConfig.ALARM_STATUS.ON:
         alarm.status = AlarmConfig.ALARM_STATUS.OFF
+        Audit("ALA", "Alarm Armed", "Alarm")
     else:
         alarm.status = AlarmConfig.ALARM_STATUS.ON
+        Audit("ALA", "Alarm Disarmed", "Alarm")
 
     alarm.save()
 
@@ -80,3 +82,16 @@ def ToggleObject(request):
     det_obj.save()
 
     return redirect('alarm:alarm-detection')
+
+def AckAlarm(request):
+    """
+    Acknowledge Alarm from Dash
+    """
+    Audit("ALA", "Alarm Acknowledged from Dashboard", "Alarm")
+    alarm = AlarmConfig.objects.first()
+    alarm_status = alarm.current_type
+
+    alarm.current_type = AlarmConfig.ALARM_TYPES.OFF
+    alarm.save()
+    
+    return redirect('dashboard:dash')

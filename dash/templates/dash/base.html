@@ -91,7 +91,7 @@
                 <div>
                     {% if alarm.status == 'ON' %}
                         {% if alarm.current_type != 'OFF' %}
-                            <a class="btn btn-danger" href="#">ALARM!</button>
+                            <a class="btn btn-danger" href="{% url 'alarm:ack-alarm' %}">ALARM!</button>
                         {% endif %}
                     {% endif %}
                     {% if alarm.get_status_display == 'On' %}
