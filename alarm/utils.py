@@ -78,9 +78,9 @@ def handleButton(clicks, sensor):
         else:
             # Acknowledge alarm.
             # Turn it off and write to Audit DB
-            print("Turning Alarm off by Button Ack in " + location)
+            # print("Turning Alarm off by Button Ack in " + location)
             alarm.current_type = AlarmConfig.ALARM_TYPES.OFF
-            Audit("ALA", "Alarm disabled by button click from " + location, "MQTT")
+            Audit("ALA", "Alarm Acknowleged by button click from " + location, "MQTT")
 
 
     elif clicks == '2':
@@ -89,7 +89,6 @@ def handleButton(clicks, sensor):
         Audit("ALA", "Panic Button Pressed! - " + location, "MQTT")
         # All cameras to take a picture
         Audit("ALA", "Panic Button initiated picture on all Cameras!", "MQTT")
-        # print("Taking picture on all cameras:");
         rc, mid = mqtt_client.publish('takepic', 0)
 
 

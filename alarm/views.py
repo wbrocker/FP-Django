@@ -11,10 +11,10 @@ def ChangeAlarmStatus(request):
 
     if alarm.status == AlarmConfig.ALARM_STATUS.ON:
         alarm.status = AlarmConfig.ALARM_STATUS.OFF
-        Audit("ALA", "Alarm Armed", "Alarm")
+        Audit("ALA", "Alarm Disarmed", "Alarm")
     else:
         alarm.status = AlarmConfig.ALARM_STATUS.ON
-        Audit("ALA", "Alarm Disarmed", "Alarm")
+        Audit("ALA", "Alarm Armed", "Alarm")
 
     alarm.save()
 

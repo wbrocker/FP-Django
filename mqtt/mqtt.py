@@ -1,11 +1,9 @@
-# from django.utils.module_loading import lazy_import
-
 import paho.mqtt.client as mqtt
 from django.conf import settings
 import time
 
 last_button_click_time = 0
-debouce_period = 2
+debouce_period = 0.5
 
 # Function for connecting
 def on_connect(mqtt_client, userdata, flags, rc):
@@ -22,7 +20,6 @@ def on_connect(mqtt_client, userdata, flags, rc):
 # MQTT Function on receiving a message
 def on_message(mqtt_client, userdata, msg):
     # print("=====================ON MESSAGE=====================")
-    global last_button_click_time
 
     from devices.models import ActiveDevices
 
