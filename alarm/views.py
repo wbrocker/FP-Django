@@ -64,6 +64,7 @@ def AlarmDetectionObjects(request):
                       "alarm": alarm_config
                   })
 
+
 def ToggleObject(request):
     """
     Toggle the detection status of the

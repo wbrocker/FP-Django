@@ -48,24 +48,24 @@ def DelDevice(request, pk):
     return redirect('devices:device-home')
 
 
-# Form to add Camera Device
-def addCamera(request):
+# # Form to add Camera Device
+# def addCamera(request):
 
-    if request.method == 'POST':
-        form = ActiveCameraForm(request.POST)
+#     if request.method == 'POST':
+#         form = ActiveCameraForm(request.POST)
 
-        if form.is_valid():
-            instance = form.save()
+#         if form.is_valid():
+#             instance = form.save()
 
-            return redirect('devices:device-home')
+#             return redirect('devices:device-home')
         
-        else:
-            print(form.errors)
+#         else:
+#             print(form.errors)
 
-    else:
-        form = ActiveCameraForm()
+#     else:
+#         form = ActiveCameraForm()
 
-    return render(request, 'devices/addcam.html', {'form': form})
+#     return render(request, 'devices/addcam.html', {'form': form})
 
 def AddDevice(request):
     """
@@ -319,7 +319,7 @@ def CaptureImage(request, pk):
     ip_addr = cam.ip
 
     mqtt_client.publish('takepic', pk)
-    
+
     # This section was replaced with the MQTT Functionality
     # to take the picures.
     # try:

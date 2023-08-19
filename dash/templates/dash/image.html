@@ -36,7 +36,9 @@
                     <div class="bounding-box" style="left: {{ detect.bounding_box.origin_x }}px;
                                                     top: {{ detect.bounding_box.origin_y }}px; 
                                                     width: {{ detect.bounding_box.width }}px; 
-                                                    height: {{ detect.bounding_box.height }}px;"></div>
+                                                    height: {{ detect.bounding_box.height }}px;">
+                    <span class="object-name">{{ category.category_name }}</span>    
+                    </div>
                 {% endif %}
             {% endfor %}
         {% endfor %}

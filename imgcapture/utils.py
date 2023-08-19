@@ -11,11 +11,11 @@ from tflite_support.task import vision
 from .models import ImageDetection
 
 # Custom serialization function for the Detection object
-def serialize_detection(detection):
+def serialize_detection(detection, height):
     return {
         'bounding_box': {
             'origin_x': detection.bounding_box.origin_x,
-            'origin_y': detection.bounding_box.origin_y,
+            'origin_y': height - detection.bounding_box.origin_y - detection.bounding_box.height,
             'width': detection.bounding_box.width,
             'height': detection.bounding_box.height
         },
@@ -52,7 +52,7 @@ def detect(pk, model: str):
     filename = image_detection.image.url 
     type(filename)
     filename = "." + filename
-    print("Filename: " + filename)
+    # print("Filename: " + filename)
 
     # Open the image from filename
     inputImage = cv2.imread(filename)
@@ -81,11 +81,13 @@ def detect(pk, model: str):
     detection_result = detector.detect(input_tensor)
 
     detections = detection_result.detections
+    print("======Detections: ")
+    print(detections)
 
     # Serialize the TensorFlow object into JSON
     serialized_data = json.dumps(
         {
-            'detections': [serialize_detection(detection) for detection in detections]
+            'detections': [serialize_detection(detection, height) for detection in detections]
         }
     )
 

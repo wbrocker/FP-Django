@@ -1,6 +1,8 @@
 import os
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
+from urllib.parse import urlencode
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -27,6 +29,9 @@ def re_analyze(request, pk):
 # Function to delete specific images
 def delete_image(request, pk):
 
+    page = request.session.get('page_number', 1)
+    print("Page Number: " + str(page))
+
     Audit("IMA", "Deleting image: " + str(pk), "IMGCapture")
     # Retrieve the database object
     image = get_object_or_404(ImageDetection, pk=pk)
@@ -42,7 +47,10 @@ def delete_image(request, pk):
         if os.path.exists(image_path):
             os.remove(image_path)
 
-    return redirect('dashboard:image-list')
+    # Construct the URL that include a page number
+    url = reverse('dashboard:image-list') + '?' + urlencode({'page': page})
+
+    return redirect(url)
 
 def delete_all(request):
     """

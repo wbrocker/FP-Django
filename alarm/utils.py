@@ -30,6 +30,7 @@ def checkAlarm(imageId):
                 # Alarm on Any movement
                 detlist.append('all')
         
+            # If ALL objects not selected, add the selected ones.
             elif item.alarm_on_object and detlist.count('all') == 0:
                 detlist.append(item.name)
         
@@ -45,15 +46,21 @@ def checkAlarm(imageId):
         # Else go through the list to see if object is detected
         elif len(image.detection_data) > 10:
             json_data = json.loads(image.detection_data)
-            print("Iterating....")
+            # print("Iterating....")
 
             for item in json_data['detections']:
-                print(item)
+                # print(item)
+                item_name = item['categories'][0]['category_name']
                 if detlist.count(item['categories'][0]['category_name']) and item['categories'][0]['score'] >= alarm.score:
                     print("Object Detected and Score is high! Alarm to be raised!")
                     raiseAlarm = True
                     desc = "Alarm for " + item['categories'][0]['category_name'] + " Score: " + str(item['categories'][0]['score']) + " > " + str(alarm.score)
+                    print(desc)
                     Audit("ALA", desc, "Alarm")
+
+                # If the item is NOT in the list, add it to the DetectionObjects list.
+                DetectionObjects.objects.get_or_create(name=item_name)
+
 
         if raiseAlarm:
             print("Raising the Alarm!")

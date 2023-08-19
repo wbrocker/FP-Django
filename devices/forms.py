@@ -1,18 +1,6 @@
 from django import forms
 from .models import Locations, ActiveDevices
 
-# class CustomJSON(forms.JSONField):
-#     def __init__(self, *args, allowed_keys=None, **kwargs):
-#         self.allowed_keys = allowed_keys
-#         super().__init__(*args, **kwargs)
-
-#     def to_pythom(self, value):
-#         value = super().to_python(value)
-#         if self.allowed_keys:
-#             value = {key: value(key) for key in self.allowed_keys if key in value}
-
-#         return value
-
 class DeviceForm(forms.ModelForm):
     # json_data = CustomJSON(allowed_keys=['flash', 'picInterval'])
     class Meta:

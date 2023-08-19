@@ -41,12 +41,10 @@ def imageList(request):
     except EmptyPage:
         # If the page is out of range, show the last one
         images = paginator.page(paginator.num_pages)
-    
-        # Parse the detection_data for each image
-        # for image in images:
-        #     detection_data = json.loads(image.detection_data)
-        #     image.detection_data = detection_data               # Replace the detection_data field
-        #                                                         # with parsed JSON
+
+    # Store page number in session. This is to ensure that we
+    # can return the user to the exact page.
+    request.session['page_number'] = page
 
     return render(request,
                   'dash/images.html',
