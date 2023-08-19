@@ -27,7 +27,9 @@
     {% for image in images %} 
         <tr>
             <td>{{ image.id }}</td>
-            <td>{{ image.cameraId }}</td>
+            <td data-bs-toggle="tooltip" title="Click to get images from this camera only">
+                <a class="btn btn-primary" href="{% url 'dashboard:image-by-cam' camId=image.cameraId %}">{{ image.cameraId }}</a>
+            </td>
             <td><a href="{% url 'dashboard:image' pk=image.id %}">
                 <img src="{{ image.image.url }}" class="img-thumbnail" height="200" width="200"></a></td>
             <td data-bo-toggle="tooltip" title="{{ image.created }}">{{ image.created|timesince }} ago</td>

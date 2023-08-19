@@ -41,6 +41,8 @@
                     <p>Name: {{ camera.name }}</p>
                     <p>Status: {{camera.get_status_display }}</p>
                     <p>Flash: {% if camera.data.flash %} On {% else %} Off {% endif %}</p>
+                    <p data-bs-toggle="tooltip" title="Images taken on this camera">
+                        <a href="{% url 'dashboard:image-by-cam' camId=camera.id %}">Images</a></p>
                     <br/>
                     {% if camera.status == 'ACT' %}
                         <p class="small-font bottom-right-italic">Online</p>

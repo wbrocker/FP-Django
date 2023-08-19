@@ -8,6 +8,8 @@ from tflite_support.task import core
 from tflite_support.task import processor
 from tflite_support.task import vision
 
+from audit.utils import AuditLog
+
 from .models import ImageDetection
 
 # Custom serialization function for the Detection object
@@ -94,6 +96,8 @@ def detect(pk, model: str):
     image_detection.analyzed = True
     image_detection.detection_data = serialized_data
     image_detection.save()
+
+    AuditLog("TEN", "Image Analyzed - " + str(image_detection.pk), "TensorFlow")
 
     # Call the Alarm function to determine if alarm must be raised
     from alarm.utils import checkAlarm

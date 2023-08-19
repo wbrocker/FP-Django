@@ -3,28 +3,23 @@
 {% block title %}Image{% endblock %} 
 
 {% block content %} 
-
-    <table>
-        <tr>
-            <th>Image Id</th>
-            <th>CameraId</th>
-            <th>Created</th>
-            <th>Updated</th>
-            <th>Detection Details</th>
-            <th>Re-Check</th>
-            <th>Delete</th>
-        </tr>
+    <div class="container">
+        <p><strong>Image Id:</strong> {{ image.id }}</p>
+        <p><strong>Camera Id:</strong> {{ image.cameraId }}</p>
+        <p><strong>Created:</strong> {{ image.created }}</p>
+        <p><strong>Updated:</strong> {{ image.updated }}</p>
+        <p><strong>Detection Details:</strong>
+            {% for detect in image.detection_data.detections %}
+                {% for category in detect.categories %}
+                    {{ category.category_name }} - score: {{ category.score }}
+                {% endfor %}
+            {% endfor %}
+        </p>
+        <p><a class="btn btn-primary" href="{% url 'imgcapture:analyze' pk=image.id %}">Re-Analyze Image</a>
+        <a class="btn btn-danger" href="{% url 'imgcapture:delete' pk=image.id %}">Delete Image</a></p>
+    </div>
     
-        <tr>
-            <td>{{ image.id }}</td>
-            <td>{{ image.cameraId }}</td>
-            <td>{{ image.created }}</td>
-            <td>{{ image.updated }}</td>
-            <td>{{ image.detection_data.detections }}</td>
-            <td><a href="{% url 'imgcapture:analyze' pk=image.id %}">Analyze</a></td>
-            <td><a href="{% url 'imgcapture:delete' pk=image.id %}">Delete</a> </td>
-        </tr>
-    </table>
+    <br/>
     <div class="image-container">
         <img src="{{ image.image.url }}" alt="Image">
         {% for detect in image.detection_data.detections %} 
@@ -37,7 +32,7 @@
                                                     top: {{ detect.bounding_box.origin_y }}px; 
                                                     width: {{ detect.bounding_box.width }}px; 
                                                     height: {{ detect.bounding_box.height }}px;">
-                    <span class="object-name">{{ category.category_name }}</span>    
+                    <span class="object-name">{{ category.category_name }} - Detection Score: {{ category.score }}</span>    
                     </div>
                 {% endif %}
             {% endfor %}

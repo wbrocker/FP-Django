@@ -52,6 +52,39 @@ def imageList(request):
                    'alarm': alarm})
 
 
+def ImageListByCam(request, camId):
+    """
+    Return images from specific CameraId
+    """
+    
+    alarm = AlarmConfig.objects.get(pk=1)
+    all_images = ImageDetection.objects.filter(cameraId=camId).order_by('-created')
+    paginator = Paginator(all_images, 10)                       # 10 Images per page
+    page = request.GET.get('page')
+
+    for image in all_images:
+        detection_data = json.loads(image.detection_data)
+        image.detection_data = detection_data
+
+    try:
+        images = paginator.page(page)
+        
+    except PageNotAnInteger:
+        # Show the 1st page if page parameter is not an integer
+        images = paginator.page(1)
+    except EmptyPage:
+        # If the page is out of range, show the last one
+        images = paginator.page(paginator.num_pages)
+
+    # Store page number in session. This is to ensure that we
+    # can return the user to the exact page.
+    request.session['page_number'] = page
+
+    return render(request,
+                  'dash/images.html',
+                  {'images': images,
+                   'alarm': alarm})
+
 # Function to return individual image.
 def individualImage(request, pk):
     alarm = AlarmConfig.objects.get(pk=1)
