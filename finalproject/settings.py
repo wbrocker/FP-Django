@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'django.contrib.humanize',
     'audit',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -67,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'finalproject.urls'
@@ -155,3 +157,6 @@ MQTT_PASSWORD = ''
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+# Allow access from all domains
+CORS_ORIGIN_ALLOW_ALL = True
