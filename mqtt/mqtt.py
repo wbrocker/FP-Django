@@ -2,7 +2,7 @@ import paho.mqtt.client as mqtt
 from django.conf import settings
 import time
 
-last_button_click_time = 0
+last_button_click_time = time.time()
 debouce_period = 0.5
 
 # Function for connecting
@@ -73,24 +73,24 @@ def on_message(mqtt_client, userdata, msg):
         print("GOT THE BUTTON!")
         current_time = time.time()
 
-        if current_time - last_button_click_time >= debouce_period:
-            print(str(current_time - last_button_click_time))
-            from alarm.utils import handleButton
-            # print("MQTT TOPIC ESP/BUTTON/")
-            # print("MQTT Button Clicked...............")
+        # if current_time - last_button_click_time >= debouce_period:
+        # print(str(current_time - last_button_click_time))
+        from alarm.utils import handleButton
+        # print("MQTT TOPIC ESP/BUTTON/")
+        # print("MQTT Button Clicked...............")
 
-            deviceId = msg.topic[len(prefixButton):]
-            print("DeviceID: " + deviceId)
-            # deviceDb = ActiveDevices.objects.get(pk=deviceId)
-            payload = msg.payload.decode('utf-8')
-            print("Payload: " + payload)
+        deviceId = msg.topic[len(prefixButton):]
+        print("DeviceID: " + deviceId)
+        # deviceDb = ActiveDevices.objects.get(pk=deviceId)
+        payload = msg.payload.decode('utf-8')
+        print("Payload: " + payload)
 
 
-            handleButton(payload, deviceId)
-            # handleButton_lazy()(payload, deviceId)
-            last_button_click_time = current_time
-        else:
-            print("TIMING ISSUE!")
+        handleButton(payload, deviceId)
+        # handleButton_lazy()(payload, deviceId)
+        last_button_click_time = current_time
+        # else:
+            # print("TIMING ISSUE!")
 
 client = mqtt.Client()
 client.on_connect = on_connect

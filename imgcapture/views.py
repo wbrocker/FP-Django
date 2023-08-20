@@ -30,7 +30,7 @@ def re_analyze(request, pk):
 def delete_image(request, pk):
 
     page = request.session.get('page_number', 1)
-    print("Page Number: " + str(page))
+    # print("Page Number: " + str(page))
 
     Audit("IMA", "Deleting image: " + str(pk), "IMGCapture")
     # Retrieve the database object
