@@ -5,6 +5,7 @@ from imgcapture.models import ImageDetection
 from devices.utils import GetSensorLocation
 from audit.utils import Audit
 from mqtt.mqtt import client as mqtt_client
+from audit.models import AuditLog
 
 def checkAlarm(imageId):
     """
@@ -77,17 +78,25 @@ def handleButton(clicks, sensor):
     location = GetSensorLocation(sensor)
     alarm = AlarmConfig.objects.first()
     alarm_status = alarm.current_type
+    last_audit = AuditLog.objects.last()
 
     if clicks == '1':
         if alarm_status == AlarmConfig.ALARM_TYPES.OFF:     # Alarm is off. Just log
             print("Single Click while alarm is Off - " + location)
-            Audit("ALA", "Button Clicked in " + location, "MQTT")
+            msg_text = "Button Clicked in " + location
+            print(msg_text + "  versus " + last_audit.description)
+            if last_audit.description == msg_text:
+                print("Ignore!")
+            else:
+                Audit("ALA", msg_text, "MQTT")
         else:
             # Acknowledge alarm.
             # Turn it off and write to Audit DB
             # print("Turning Alarm off by Button Ack in " + location)
             alarm.current_type = AlarmConfig.ALARM_TYPES.OFF
-            Audit("ALA", "Alarm Acknowleged by button click from " + location, "MQTT")
+            msg_text = "Alarm Acknowleged by button click from " + location
+            if last_audit.description != msg_text:
+                Audit("ALA", msg_text, "MQTT")
 
 
     elif clicks == '2':

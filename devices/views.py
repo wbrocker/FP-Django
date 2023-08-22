@@ -23,8 +23,6 @@ def deviceList(request):
     View that will list all the available
     devices
     """
-
-    # camera_devices = ActiveCamera.objects.all().order_by('id')
     all_devices = ActiveDevices.objects.all().order_by('type')
     alarm = AlarmConfig.objects.get(pk=1)
 
@@ -40,32 +38,11 @@ def DelDevice(request, pk):
     Delete Device From DB
     """
     device = ActiveDevices.objects.get(id=pk)
-
     device.delete()
-
     Audit("CFG", "Device Deleted", "Devices")
 
     return redirect('devices:device-home')
 
-
-# # Form to add Camera Device
-# def addCamera(request):
-
-#     if request.method == 'POST':
-#         form = ActiveCameraForm(request.POST)
-
-#         if form.is_valid():
-#             instance = form.save()
-
-#             return redirect('devices:device-home')
-        
-#         else:
-#             print(form.errors)
-
-#     else:
-#         form = ActiveCameraForm()
-
-#     return render(request, 'devices/addcam.html', {'form': form})
 
 def AddDevice(request):
     """
@@ -174,24 +151,24 @@ def setCamStatus(request):
 
     return redirect('devices:device-home')
 
-def setDeviceStatus(request):
-    if request.method == 'GET':
-        device_id = request.GET.get('device')
+# def setDeviceStatus(request):
+#     if request.method == 'GET':
+#         device_id = request.GET.get('device')
 
-        device = get_object_or_404(ActiveDevices, id=device_id)
+#         device = get_object_or_404(ActiveDevices, id=device_id)
 
-        if device.type == 'SEN':
-            if device.status == 'INA' or device.status == 'DIS' or device.status == 'ERR':
-                device.status = 'ACT'
-            elif device.status == 'ACT':
-                device.status = 'INA'
+#         if device.type == 'SEN':
+#             if device.status == 'INA' or device.status == 'DIS' or device.status == 'ERR':
+#                 device.status = 'ACT'
+#             elif device.status == 'ACT':
+#                 device.status = 'INA'
 
-        device.save()
+#         device.save()
 
-        # Update the device with new settings
-        setDeviceSettings(device_id)
+#         # Update the device with new settings
+#         setDeviceSettings(device_id)
 
-    return redirect('devices-home')
+#     return redirect('devices-home')
 
 
 # Change the Camera Flash

@@ -6,6 +6,7 @@ class AuditLog(models.Model):
         ALARM = 'ALA', 'Alarm'
         CONFIG = 'CFG', 'Configuration'
         CAMERA = 'CAM', 'Camera'
+        SENSOR = 'SEN', 'Sensor'
         IMAGE = 'IMA', 'Image'
         TENSOR = 'TEN', 'TensorFlow'
         OTHER = 'OTH', 'Other'

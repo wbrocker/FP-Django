@@ -2,7 +2,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from alarm.models import AlarmConfig
 
-from devices.utils import ChangeCamStatus, ActivateOrDeactivateAlarm
+from devices.utils import ActivateOrDeactivateAlarm
 from mqtt.mqtt import client as mqtt_client
 
 @receiver(post_save, sender=AlarmConfig)
@@ -13,16 +13,17 @@ def active_and_log_alarm(sender, instance, created, **kwargs):
     # Activate Cameras as well as ESP8266
     alarm_trig_msg = 0
 
+    # This section calls the ActivateOrDeactivate to ensure that the 
+    # DB settings are correctly updated for the device. It then sets the
+    # alarm_msg which will get sent to the devices using MQTT.
     if instance.status == AlarmConfig.ALARM_STATUS.OFF:
-        print("Deactivating Alarm!")
+        # print("Deactivating Alarm!")
         alarm_msg = 0
         ActivateOrDeactivateAlarm(False)                # Deactivate Camera
-        # ChangeCamStatus(0)
     elif instance.status == AlarmConfig.ALARM_STATUS.ON:
-        print("Activating Alarm!")
+        # print("Activating Alarm!")
         alarm_msg = 1
         ActivateOrDeactivateAlarm(True)                 # Activate Camera
-        # ChangeCamStatus(1)
 
     if instance.current_type == AlarmConfig.ALARM_TYPES.AUDIBLE:
         alarm_trig_msg = 1

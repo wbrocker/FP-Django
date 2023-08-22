@@ -5,6 +5,8 @@ import time
 last_button_click_time = time.time()
 debouce_period = 0.5
 
+topic_last_message = {}
+
 # Function for connecting
 def on_connect(mqtt_client, userdata, flags, rc):
     if rc == 0:
@@ -19,9 +21,13 @@ def on_connect(mqtt_client, userdata, flags, rc):
 
 # MQTT Function on receiving a message
 def on_message(mqtt_client, userdata, msg):
-    # print("=====================ON MESSAGE=====================")
-
+    """
+    This function is called when a message is received 
+    from MQTT
+    """
+    from audit.utils import Audit
     from devices.models import ActiveDevices
+    from devices.utils import GetSensorLocation
 
     # Birth and Deatch Notificaitons
     prefix = 'esp/lwt/'
@@ -41,9 +47,13 @@ def on_message(mqtt_client, userdata, msg):
         if payload == 'hello':
             deviceDb.status = ActiveDevices.Status.ACTIVE
             print("Set device to active")
+            auditMsg = "Sensor in " + GetSensorLocation(deviceId) + " is Active"
+            Audit("SEN", auditMsg, "MQTT")
         elif payload == 'bye':
             deviceDb.status = ActiveDevices.Status.INACTIVE
             print("Set device to Inactive")
+            auditMsg = "Sensor in " + GetSensorLocation(deviceId) + " is In-Active"
+            Audit("SEN", auditMsg, "MQTT")
 
         print(deviceDb.status)
         deviceDb.save()
@@ -84,13 +94,10 @@ def on_message(mqtt_client, userdata, msg):
         # deviceDb = ActiveDevices.objects.get(pk=deviceId)
         payload = msg.payload.decode('utf-8')
         print("Payload: " + payload)
-
-
+        
         handleButton(payload, deviceId)
-        # handleButton_lazy()(payload, deviceId)
-        last_button_click_time = current_time
-        # else:
-            # print("TIMING ISSUE!")
+
+
 
 client = mqtt.Client()
 client.on_connect = on_connect

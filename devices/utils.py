@@ -12,7 +12,6 @@ def getCameraSettings(id):
     This will update the DB with all the latest
     settings that are saved.
     """
-    # instance = ActiveCamera.objects.get(pk=id)
     instance = ActiveDevices.objects.get(pk=id)
     ip_addr = instance.ip
     active = False
@@ -49,7 +48,9 @@ def getCameraSettings(id):
 def setCameraSettings(id):
     """ 
     Function to set the camera settings according
-    to what was saved in the DB.
+    to what was saved in the DB. This updates the camera
+    though a REST call. It can also be used to mark the 
+    camera inactive.
     """
     print("Updating Camera!")
     cam = ActiveDevices.objects.get(id=id)
@@ -76,17 +77,17 @@ def setCameraSettings(id):
         cam.status = "ERR"
         cam.save()
 
-def setDeviceSettings(id):
-    """
-    Set the settings from the DB
-    """
-    device = ActiveDevices.objects.get(id=id)
+# def setDeviceSettings(id):
+#     """
+#     Set the settings from the DB
+#     """
+#     device = ActiveDevices.objects.get(id=id)
 
-    # Read the JSON
-    data_dict = device.data
+#     # Read the JSON
+#     data_dict = device.data
 
-    if device.status == 'ACT':
-        data_dict
+#     if device.status == 'ACT':
+#         data_dict
 
 def ChangeCamStatus(status):
     """
@@ -124,7 +125,7 @@ def ActivateOrDeactivateAlarm(status):
         if dev.type == ActiveDevices.Type.CAM:
             # get the JSON Config for the camera
             data_dict = dev.data
-            print("Changing Camera Status")
+            # print("Changing Camera Status")
             if status:
                 # print("Making Camera Active")
                 dev.status = ActiveDevices.Status.ACTIVE
