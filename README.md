@@ -2,6 +2,8 @@
 
 Welcome to the Django component repository of the IoT Wildlife and Intrusion Detection System!
 
+The Arduino repository can be found at <a href="https://github.com/wbrocker/FP-Arduino-Code">FP-Arduino-Code</a>.
+
 ## Table of Contents
 
 - [Introduction](#introduction)
