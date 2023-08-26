@@ -64,7 +64,8 @@ def checkAlarm(imageId):
 
 
         if raiseAlarm:
-            print("Raising the Alarm!")
+            # print("Raising the Alarm!")
+            Audit("ALA", "Raising Alarm!!", "Alarm")
             # Write audit log
             alarm.current_type = alarm.type
             alarm.save()
