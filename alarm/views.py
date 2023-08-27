@@ -33,6 +33,7 @@ def AlarmConfigView(request):
 
         if form.is_valid():
             instance = form.save()
+            Audit("ALA", "Changes made to Alarm Configs", "Alarm")
 
             return redirect('dashboard:dash')
     
@@ -55,12 +56,20 @@ def AlarmDetectionObjects(request):
     the alarm if detected.
     """
     alarm_config = AlarmConfig.objects.first()
-    det_objects = DetectionObjects.objects.all()
+    det_objects = DetectionObjects.objects.all().order_by('name')
+
+    # Retrieve and remove the 'all' object if it exists
+    all_object = det_objects.filter(name='all').first()
+    if all_object:
+        det_objects = det_objects.exclude(pk=all_object.pk)
+
+    # Create a sorted list of detection objects (excluding 'all')
+    sorted_det_objects = [all_object] + list(det_objects)
 
     return render(request,
                   'alarm/objects.html',
                   {
-                      "detection": det_objects,
+                      "detection": sorted_det_objects,
                       "alarm": alarm_config
                   })
 

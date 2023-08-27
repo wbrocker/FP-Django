@@ -15,7 +15,7 @@
             {% for obj in detection %}
             <tr>
                 <td>{{ obj.name }}</td>
-                <td>
+                <td data-bs-toggle="tooltip" title="Click to Toggle">
                     <a href="{% url 'alarm:alarm-obj-toggle' %}?obj={{ obj.id }}">
                         <button type="button" class="btn 
                         {% if obj.alarm_on_object %}

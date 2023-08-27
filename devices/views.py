@@ -335,6 +335,8 @@ def EditPicInterval(request, pk):
             # Save the new value
             cam.save()
 
+            Audit("CAM", "Picture Interval for Camera " + str(cam.pk) + " was updated to " + str(picIntervalRet) + "ms.", "Devices")
+
             # Update the camera
             setCameraSettings(pk)
 
@@ -358,17 +360,23 @@ def LocationList(request):
     """
     View to list locations / rooms / areas.
     """
+    alarm = AlarmConfig.objects.get(pk=1)
     locations = Locations.objects.all()
     print(locations)
     return render(request,
                 'devices/location_list.html',
-                {'locations': locations})
+                {
+                    'locations': locations,
+                    'alarm': alarm
+                })
 
 
 def AddLocation(request):
     """
     Add Locations
     """
+    alarm = AlarmConfig.objects.get(pk=1)
+
     if request.method == 'POST':
         form = LocationForm(request.POST)
     
@@ -385,13 +393,17 @@ def AddLocation(request):
         form = LocationForm()
 
     return render(request, 'devices/addloc.html',
-                  {'form': form})
+                    {
+                      'form': form,
+                      'alarm': alarm  
+                    })
 
 
 def EditLocation(request, pk):
     """
     Edit Locations
     """
+    alarm = AlarmConfig.objects.get(pk=1)
     location = get_object_or_404(Locations, pk=pk)
 
     if request.method == 'POST':
@@ -406,7 +418,10 @@ def EditLocation(request, pk):
     
     return render(request, 
                     'devices/editloc.html',
-                    {'form': loc_form})
+                    {
+                        'form': loc_form,
+                        'alarm': alarm
+                    })
 
 
 def DeleteLocation(request, pk):

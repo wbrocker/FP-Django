@@ -23,15 +23,17 @@
     {% if device.type == 'CAM' %}
         <tr>
             <td>
-                <a href="{% url 'devices:setcamstatus' %}?device={{ device.id }}">
+                <a href="{% url 'devices:setcamstatus' %}?device={{ device.id }}"
+                    data-bs-toggle="tooltip" title="Device Active, Inactive, Error or Discovered">
                 <button type="button" class="btn btn-outline-primary">
                 {{ device.get_status_display }}</button></a>
             </td>
             <td>{{ device.name }}</td>
             <td>{{ device.description }}</td>
-            <td>{{ device.location }}</td>
+            <td data-bs-toggle="tooltip" title="{{ device.location.description }}">{{ device.location }}</td>
             <td>
-                <a href="{% url 'devices:setcamflash' %}?device={{ device.id }}">
+                <a href="{% url 'devices:setcamflash' %}?device={{ device.id }}"
+                    data-bs-toggle="tooltip" title="Toggle Flash on/off">
                     <button type="button" class="btn btn-outline-primary">
                         {% if device.data.flash %}
                             On
@@ -42,8 +44,11 @@
                 </a>
             </td>
             <td>
-                <a href="{% url 'devices:editpicint' device.id %}" class="btn btn-primary">
-                    {{ device.data.picInterval }}
+                <a href="{% url 'devices:editpicint' device.id %}" 
+                    class="btn btn-primary" 
+                    data-bs-toggle="tooltip" 
+                    title="Shortest inteval between pictures.">
+                    {{ device.data.picInterval }} ms
                 </a>
                 </td>
             <td>{{ device.ip }}</td>
@@ -80,7 +85,8 @@
                 {{ device.get_status_display }}</button></td>
             <td>{{ device.name }}</td>
             <td>{{ device.description }}</td>
-            <td>{{ device.location }}</td>
+            <td data-bs-toggle="tooltip" title="{{ device.location.description}}">
+                {{ device.location }}</td>
             <td>{{ device.data.temperature }}&deg;C</td>
             <td>{{ device.data.humidity }}%</td>
             <td>{{ device.ip }}</td>

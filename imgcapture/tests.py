@@ -3,6 +3,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 
 from .models import ImageDetection
+from alarm.models import AlarmConfig
 
 # Models Testcase
 class ImageModelTest(TestCase):
@@ -36,6 +37,12 @@ class DeleteAllViewTestCase(TestCase):
     def setUp(self):
         # Create a test client
         self.client = Client() 
+
+        # Test creating an AlarmConfig instance
+        alarm_config = AlarmConfig.objects.create()
+        self.assertEqual(alarm_config.status, AlarmConfig.ALARM_STATUS.OFF)
+        self.assertEqual(alarm_config.type, AlarmConfig.ALARM_TYPES.AUDIBLE)
+        self.assertEqual(alarm_config.current_type, AlarmConfig.ALARM_TYPES.OFF)
 
     def test_delete_all_with_dnd_true(self):
         # Create ImageDetection object with DND=True

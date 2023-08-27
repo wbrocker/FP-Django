@@ -9,6 +9,7 @@ from django.dispatch import receiver
 
 from .utils import detect
 from audit.utils import Audit
+from alarm.models import AlarmConfig
 
 import logging
 
@@ -57,6 +58,7 @@ def delete_all(request):
     Delete all images apart from 
     the pictures marked as DND
     """
+    alarm = AlarmConfig.objects.get(pk=1)
     Audit("IMA", "Deleting ALL images from Database", "IMGCapture")
     images_to_delete = ImageDetection.objects.filter(dnd=False)
 
@@ -70,7 +72,10 @@ def delete_all(request):
         return redirect('dashboard:image-list')
     
     else:
-        return render(request, 'imgcapture/del_all.html')
+        return render(request, 'imgcapture/del_all.html',
+                      {
+                          'alarm': alarm
+                      })
 
     
 
