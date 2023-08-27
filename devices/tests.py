@@ -7,7 +7,7 @@ import json
 from .models import Locations, ActiveDevices
 from alarm.models import AlarmConfig
 
-from .forms import DeviceForm, LocationForm
+from .forms import DeviceForm, LocationForm, PicIntervalForm
 
 
 # Models Testcases
@@ -17,7 +17,7 @@ class ActiveDevicesModelTest(TestCase):
         # Create test location for Foreign keys
         self.location = Locations.objects.create(name='Test Location')
 
-        # Ceeate a test ActiveDevices instance
+        # Create a test ActiveDevices instance
         self.device = ActiveDevices.objects.create(
             type=ActiveDevices.Type.CAM,
             name='Test Camera',
@@ -223,3 +223,58 @@ class RegisterDeviceViewTestCase(TestCase):
         }
         self.assertDictContainsSubset(response.json(), expected_data)
         
+
+class EditPicItnervalViewTestCase(TestCase):
+    def setUp(self):
+        # Test creating an AlarmConfig instance
+        self.alarm = AlarmConfig.objects.create()
+
+        # Create test location for Foreign keys
+        self.location = Locations.objects.create(name='Test Location')
+
+        # Create a test ActiveDevices instance
+        self.device = ActiveDevices.objects.create(
+            type=ActiveDevices.Type.CAM,
+            name='Test Camera',
+            description='This is a test',
+            location = self.location,
+            status=ActiveDevices.Status.DISCOVERED,
+            data={'key':'value'},
+            ip='192.168.2.1',
+            firmware='0.1'
+        )
+
+        self.url = reverse('devices:editpicint', kwargs={'pk': self.device.pk})
+
+    def test_get_request(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'devices/picint.html')
+        self.assertIsInstance(response.context['form'], PicIntervalForm)
+        self.assertEqual(response.context['alarm'], self.alarm)
+        self.assertEqual(response.context['cam'], self.device)
+
+
+    def test_valid_post_request(self):
+        data = {'picInterval': 5}  # Change this value as needed
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, 302)  # Should redirect
+        self.assertEqual(response.url, reverse('devices:device-home'))
+
+        # Refresh the cam instance
+        self.device.refresh_from_db()
+        self.assertEqual(self.device.data['picInterval'], 5)  # Assert the new value is saved
+
+    def test_invalid_post_request(self):
+        data = {'picInterval': 'invalid'}  # Invalid value
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'devices/picint.html')
+        self.assertIsInstance(response.context['form'], PicIntervalForm)
+        self.assertIn('form', response.context)
+        self.assertIn('alarm', response.context)
+        self.assertIn('cam', response.context)
+
+    def tearDown(self):
+        self.alarm.delete()
+        self.device.delete()

@@ -10,6 +10,7 @@ urlpatterns = [
     path('deldevice/<int:pk>/', views.DelDevice, name='del-device'),
     path('edit_cam/<int:pk>/', views.EditCam, name='edit-cam'),
     path('edit_device/<int:pk>/', views.EditDevice, name='edit-device'),
+    path('picint/<int:pk>/', views.EditPicInterval, name='editpicint'),
     path('setcamstatus/', views.setCamStatus, name='setcamstatus'),
     path('setcamflash/', views.setCamFlash, name='setcamflash'),
     path('register/', views.registerDevice, name='register-device'),

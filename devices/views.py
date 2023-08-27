@@ -8,7 +8,7 @@ from .models import Locations, ActiveDevices
 from alarm.models import AlarmConfig
 from audit.utils import Audit
 
-from .forms import LocationForm, DeviceForm
+from .forms import LocationForm, DeviceForm, PicIntervalForm
 from mqtt.mqtt import client as mqtt_client
 
 from .utils import getCameraSettings, setCameraSettings
@@ -312,6 +312,46 @@ def CaptureImage(request, pk):
     #     print("Error taking pic")
 
     return redirect('dashboard:dash')
+
+def EditPicInterval(request, pk):
+    """
+    Function allowing the user to change the
+    picInterval of the respective camera
+    """
+    alarm = AlarmConfig.objects.get(pk=1)
+    cam = get_object_or_404(ActiveDevices, pk=pk)
+
+    if request.method == 'POST':
+        form = PicIntervalForm(request.POST)
+        if form.is_valid():
+            # Process the form data
+            picIntervalRet = form.cleaned_data['picInterval']
+            print("New Value: " + str(picIntervalRet))
+
+            # Read the JSON data
+            data_dict = cam.data
+            data_dict['picInterval'] = picIntervalRet
+
+            # Save the new value
+            cam.save()
+
+            # Update the camera
+            setCameraSettings(pk)
+
+            return redirect('devices:device-home')
+        
+        else:
+            print(form.errors)
+
+    else:
+        form = PicIntervalForm()
+
+    return render(request, 'devices/picint.html', 
+                  {
+                      'form': form,
+                      'alarm': alarm,
+                      'cam': cam
+                  })
 
 
 def LocationList(request):

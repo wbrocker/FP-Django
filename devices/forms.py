@@ -29,6 +29,9 @@ class LocationForm(forms.ModelForm):
         model = Locations
         fields = "__all__"
 
+class PicIntervalForm(forms.Form):
+    picInterval = forms.IntegerField(label='Picture Interval')
+
 
     
 

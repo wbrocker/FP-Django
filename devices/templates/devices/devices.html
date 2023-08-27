@@ -41,7 +41,11 @@
                     </button>
                 </a>
             </td>
-            <td>{{ device.data.picInterval }}</td>
+            <td>
+                <a href="{% url 'devices:editpicint' device.id %}" class="btn btn-primary">
+                    {{ device.data.picInterval }}
+                </a>
+                </td>
             <td>{{ device.ip }}</td>
             <td>{{ device.firmware }}</td>
             <td><a class="btn btn-primary" href="{% url 'devices:edit-cam' device.id %}">Edit</a></td>
