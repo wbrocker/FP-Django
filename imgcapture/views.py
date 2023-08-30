@@ -27,8 +27,10 @@ def re_analyze(request, pk):
     return redirect('dashboard:image', pk=pk)
 
 
-# Function to delete specific images
 def delete_image(request, pk):
+    """
+    Function to delete a specific image.
+    """
 
     page = request.session.get('page_number', 1)
     # print("Page Number: " + str(page))
@@ -83,8 +85,6 @@ def delete_all(request):
 # csrf exempt to ensure easier upload from the ESP32-Cam
 @csrf_exempt
 def upload_image_view(request):
-    # Debug
-    print("Upload Started")
 
     # Confirm if it was a POST
     if request.method == 'POST':
@@ -101,16 +101,8 @@ def upload_image_view(request):
             image_file = form.cleaned_data['image']
             instance = form.save()                      # Save the form instance to get the DB Record
 
-            # Debug
-            # print("Detection Started!")
-
             # Process the Detect function Asynchronously.
             detect(instance.id, './imgcapture/efficientdet_lite0.tflite')
-
-            # Debug
-            # print("Detection DONE!")
-
-            # test = detect(image_file.name, 'efficientdet_lite0.tflite')
 
             return redirect('imgcapture:success')
         else:
@@ -121,6 +113,7 @@ def upload_image_view(request):
         form = ImageForm()
 
     print("Upload Done")
+    Audit("IMA", "Image uploaded.", "Camera")
     return render(request, 'upload.html', {'form': form})
 
 

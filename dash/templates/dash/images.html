@@ -13,9 +13,10 @@
     </div>
     
 
-    <table style="width: 100%;" class="table">
+    <table style="width: 100%;" class="table table-hover align-middle">
+        <thead class="table-light">
         <tr>
-            <th>Id</th>
+            <th>#</th>
             <th data-bs-toggle="tooltip" title="Camera that took pic">Camera</th>
             <th data-bs-toggle="tooltip" title="Thumbnail">Image</th>
             <th data-bs-toggle="tooltip" title="Image Creation date">Created</th>
@@ -24,6 +25,7 @@
             <th data-bs-toggle="tooltip" title="Do not delete image">DND</th>
             <th>Delete</th>
         </tr>
+        </thead>
     {% for image in images %} 
         <tr>
             <td>{{ image.id }}</td>
@@ -31,7 +33,7 @@
                 <a class="btn btn-primary" href="{% url 'dashboard:image-by-cam' camId=image.cameraId %}">{{ image.cameraId }}</a>
             </td>
             <td><a href="{% url 'dashboard:image' pk=image.id %}">
-                <img src="{{ image.image.url }}" class="img-thumbnail" height="200" width="200"></a></td>
+                <img src="{{ image.image.url }}" class="img-thumbnail" height="200" width="200" alt="Image taken from movement detection"></a></td>
             <td data-bo-toggle="tooltip" title="{{ image.created }}">{{ image.created|timesince }} ago</td>
             <td>{{ image.analyzed }}</td>
             <td>
