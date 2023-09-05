@@ -102,12 +102,13 @@ def handleButton(clicks, sensor):
 
     elif clicks == '2':
         # Double Click --> Raise Panic Alarm
-        alarm.current_type = AlarmConfig.type               # Raise the alarm
+        alarm.status = AlarmConfig.ALARM_STATUS.ON
+        alarm.current_type = alarm.type               # Raise the alarm
         Audit("ALA", "Panic Button Pressed! - " + location, "MQTT")
         # All cameras to take a picture
         Audit("ALA", "Panic Button initiated picture on all Cameras!", "MQTT")
         rc, mid = mqtt_client.publish('takepic', 0)
-
+        alarm.save()
 
     # Save the new alarm state
     alarm.save()
