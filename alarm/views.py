@@ -86,8 +86,10 @@ def ToggleObject(request):
 
     if det_obj.alarm_on_object:
         det_obj.alarm_on_object = False
+        Audit("CFG", "Detect on " + det_obj.name + " set to False", "Alarm")
     else:
         det_obj.alarm_on_object = True
+        Audit("CFG", "Detect on " + det_obj.name + " set to True", "Alarm")
 
     det_obj.save()
 

@@ -151,25 +151,6 @@ def setCamStatus(request):
 
     return redirect('devices:device-home')
 
-# def setDeviceStatus(request):
-#     if request.method == 'GET':
-#         device_id = request.GET.get('device')
-
-#         device = get_object_or_404(ActiveDevices, id=device_id)
-
-#         if device.type == 'SEN':
-#             if device.status == 'INA' or device.status == 'DIS' or device.status == 'ERR':
-#                 device.status = 'ACT'
-#             elif device.status == 'ACT':
-#                 device.status = 'INA'
-
-#         device.save()
-
-#         # Update the device with new settings
-#         setDeviceSettings(device_id)
-
-#     return redirect('devices-home')
-
 
 # Change the Camera Flash
 def setCamFlash(request):

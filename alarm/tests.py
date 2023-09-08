@@ -99,13 +99,6 @@ class CheckAlarmTestCase(TestCase):
                 mock_print.assert_called_with('Alarm Status: 1')
         
 
-    # def test_no_alarm_raised(self):
-    #     image = ImageDetection.objects.create(detection_data='{"detections": [{"categories": [{"category_name": "Animal", "score": 0.4}]}]}')
-    #     with patch('alarm.utils.json.loads', return_value={'detections': [{'categories': [{'category_name': 'Animal', 'score': 0.4}]}]} ):
-    #         with patch('builtins.print') as mock_print:
-    #             checkAlarm(image.id)
-    #             mock_print.assert_not_called()
-
 class AlarmViewsTestCase(TestCase):
     def setUp(self):
         # Create Alarmconfig and DetectionObjects instances for testing
@@ -133,34 +126,3 @@ class AlarmViewsTestCase(TestCase):
         response = self.client.get(url, {'obj': self.det_object.id})
         self.det_object.refresh_from_db()
         self.assertEqual(self.det_object.alarm_on_object, True)
-
-
-
-# class ChangeAlarmStatusViewTestCase(TestCase):
-
-#     def setUp(self):
-#         # Set up a factory to create requests
-#         self.factory = RequestFactory
-
-
-#     def test_change_alarm_status_on_to_off(self):
-#         # Test changing alarm status from ON to OFF
-#         alarm = AlarmConfig.objects.create(status=AlarmConfig.ALARM_STATUS.ON)
-#         url = reverse('alarm:alarm-status')
-#         request = self.factory.get(url)
-#         response = ChangeAlarmStatus(request)
-#         # Check if the alarm status is changed to OFF 
-#         self.assertEqual(AlarmConfig.objects.get(pk=alarm.pk).status, AlarmConfig.ALARM_STATUS.OFF)
-#         # Check if the view redirects to the Dash page
-#         self.assertRedirects(response, reverse('dashboard:dash'))
-
-#     def test_change_alarm_status_off_to_on(self):
-#         # Test changing alarm status from OFF to ON
-#         alarm = AlarmConfig.objects.create(status=AlarmConfig.ALARM_STATUS.OFF)
-#         url = reverse('alarm:alarm-status')
-#         request = self.factory.get(url)
-#         response = ChangeAlarmStatus(request)
-#         # Check if the alarm status is changed to ON
-#         self.assertEqual(AlarmConfig.objects.get(pk=alarm.pk).status, AlarmConfig.ALARM_STATUS.ON)
-#         # Check if the view redirects to the dashboard page
-#         self.assertRedirects(response, reverse('dashboard:dash'))

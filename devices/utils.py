@@ -77,17 +77,6 @@ def setCameraSettings(id):
         cam.status = "ERR"
         cam.save()
 
-# def setDeviceSettings(id):
-#     """
-#     Set the settings from the DB
-#     """
-#     device = ActiveDevices.objects.get(id=id)
-
-#     # Read the JSON
-#     data_dict = device.data
-
-#     if device.status == 'ACT':
-#         data_dict
 
 def ChangeCamStatus(status):
     """
@@ -138,6 +127,7 @@ def ActivateOrDeactivateAlarm(status):
         dev.save()
 
     return True
+
 
 def GetSensorLocation(id):
     """
